@@ -1,6 +1,6 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8">
+<!doctype html><html lang="de"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>The 7-Second Law Firm · CausaNova</title>
+<title>Die 7-Sekunden-Kanzlei · CausaNova</title>
 <style>
 :root{--bg:#071125;--panel:#0d1f3a;--accent:#19b5fe;--accent2:#7efcff;--ok:#25d366;--warn:#ffce00;--err:#ff4266;--text:#e6f2ff;--mut:#99b3cc}
 *{box-sizing:border-box}html,body{height:100%}body{margin:0;font:14px/1.35 system-ui,Segoe UI,Roboto,Inter,Arial;background:radial-gradient(80% 120% at 10% 0%,#0b1b36 0%,#071125 35%,#050d1d 100%);color:var(--text)}
@@ -40,7 +40,7 @@ hr{border:none;height:1px;background:#14305f;margin:10px 0}
 <body>
 <div class="container">
 <header>
-  <h1>⚖️ The 7-Second Law Firm <span class="badge">100% offline</span></h1>
+  <h1>⚖️ Die 7-Sekunden-Kanzlei <span class="badge">100% offline</span></h1>
   <div class="row">
     <button class="btn ghost" id="btnSeed">Seed</button>
     <a class="btn ok" id="btnWA" target="_blank" rel="noopener">WhatsApp</a>
@@ -49,66 +49,64 @@ hr{border:none;height:1px;background:#14305f;margin:10px 0}
 
 <div class="grid">
   <div class="card">
-    <h3>Client Onboarding</h3>
+    <h3>Mandat aufnehmen</h3>
     <div class="row">
       <div style="flex:1">
-        <label>Client Number</label>
-        <input id="clientNo" placeholder="e.g., 47110815">
+        <label>Mandantennummer</label>
+        <input id="clientNo" placeholder="z.B. 47110815">
       </div>
       <div style="flex:1">
         <label>Name</label>
-        <input id="clientName" placeholder="John Doe">
+        <input id="clientName" placeholder="Max Mustermann">
       </div>
     </div>
-    <label>WhatsApp Template</label>
-    <input id="waText" value="Hello, I have a question about... (photos/attachments to follow).">
-    <small class="hint">Button above opens <code>wa.me</code> with this message.</small>
-    <label>Case Details (EN)</label>
-    <textarea id="facts" rows="5" placeholder="Please describe briefly..."></textarea>
+    <label>WhatsApp Vorlage</label>
+    <input id="waText" value="Guten Tag, ich habe eine Frage zu ... (Fotos/Anlagen folgen).">
+    <small class="hint">Button oben öffnet <code>wa.me</code> mit dieser Nachricht.</small>
+    <label>Sachverhalt (DE)</label>
+    <textarea id="facts" rows="5" placeholder="Bitte kurz schildern..."></textarea>
     <div class="row">
-      <button class="btn" id="btnAnalyze">AI Analysis</button>
-      <button class="btn" id="btnSave">Save (AES-GCM/IndexedDB)</button>
-      <button class="btn warn" id="btnEaster">Easter Egg</button>
+      <button class="btn" id="btnAnalyze">KI-Prüfung</button>
+      <button class="btn" id="btnSave">Speichern (AES-GCM/IndexedDB)</button>
+      <button class="btn warn" id="btnEaster">Easter-Egg</button>
     </div>
     <div id="aiOut" class="meta"></div>
   </div>
 
   <div class="card">
-    <h3>Document & eSign</h3>
-    <label>Language</label>
+    <h3>Schriftsatz & eSign</h3>
+    <label>Sprache</label>
     <select id="lang">
-      <option value="de">Deutsch</option>
-      <option value="en" selected>English</option>
-      <option value="fr">Français</option>
-      <option value="es">Español</option>
+      <option value="de">Deutsch</option><option value="en">English</option>
+      <option value="fr">Français</option><option value="es">Español</option>
     </select>
     <label>Auto-Text (Mustache)</label>
     <textarea id="letter" rows="8"></textarea>
     <div class="row">
-      <button class="btn" id="btnGenLetter">Generate Text</button>
-      <button class="btn" id="btnPDF">Create PDF</button>
+      <button class="btn" id="btnGenLetter">Text generieren</button>
+      <button class="btn" id="btnPDF">PDF erzeugen</button>
     </div>
     <canvas id="sign" width="500" height="160" style="background:#02132a;border:1px dashed #2a5e9a;border-radius:8px"></canvas>
     <div class="row">
-      <button class="btn ghost" id="btnClear">Clear Signature</button>
-      <a id="pdfLink" class="btn" download="mandat.pdf">Save PDF</a>
-      <a id="mailLink" class="btn" target="_blank">Open E-Mail</a>
+      <button class="btn ghost" id="btnClear">Signatur löschen</button>
+      <a id="pdfLink" class="btn" download="mandat.pdf">PDF speichern</a>
+      <a id="mailLink" class="btn" target="_blank">E-Mail öffnen</a>
     </div>
   </div>
 
   <div class="card">
-    <h3>Payment · SEPA & QR</h3>
+    <h3>Zahlung · SEPA & QR</h3>
     <div class="row">
-      <div style="flex:1"><label>IBAN (Law Firm)</label><input id="iban" value="DE89370400440532013000"></div>
+      <div style="flex:1"><label>IBAN (Kanzlei)</label><input id="iban" value="DE89370400440532013000"></div>
       <div style="flex:1"><label>BIC</label><input id="bic" value="COBADEFFXXX"></div>
     </div>
     <div class="row">
-      <div style="flex:2"><label>Creditor ID</label><input id="cid" value="DE98ZZZ09999999999"></div>
-      <div style="flex:1"><label>Amount (€)</label><input id="amt" value="299.00"></div>
+      <div style="flex:2"><label>Gläubiger-ID</label><input id="cid" value="DE98ZZZ09999999999"></div>
+      <div style="flex:1"><label>Betrag (€)</label><input id="amt" value="299.00"></div>
     </div>
     <div class="row">
       <button class="btn" id="btnSEPA">SEPA XML</button>
-      <button class="btn" id="btnQR">Generate QR</button>
+      <button class="btn" id="btnQR">QR erzeugen</button>
       <a id="sepaDL" class="btn" download="sepa.xml">Download XML</a>
     </div>
     <textarea id="sepaOut" rows="7" readonly></textarea>
@@ -116,38 +114,40 @@ hr{border:none;height:1px;background:#14305f;margin:10px 0}
   </div>
 
   <div class="card">
-    <h3>Status Tracker & Video</h3>
+    <h3>Status-Tracker & Video</h3>
     <div class="status3d">
       <div class="wheel" id="wheel"><div class="slice"></div><div class="slice"></div><div class="slice"></div></div>
     </div>
     <div class="row">
-      <button class="btn" id="btnDraft">Draft</button>
-      <button class="btn" id="btnReview">Review</button>
-      <button class="btn ok" id="btnSend">Sent</button>
-      <button class="btn" id="btnClip">15s Status Clip</button>
+      <button class="btn" id="btnDraft">Entwurf</button>
+      <button class="btn" id="btnReview">Prüfung</button>
+      <button class="btn ok" id="btnSend">Versand</button>
+      <button class="btn" id="btnClip">15s Status-Clip</button>
       <a id="clipDL" class="btn" download="status.webm">Download Clip</a>
     </div>
     <video id="clip" controls style="width:100%;max-height:220px;background:#000;border-radius:8px"></video>
   </div>
 </div>
 
+<!-- DSL: konfiguriert Regeln/Paragraphen/Templates -->
 <script id="dsl" type="application/json">{
   "law":{
     "regex":[
-      {"k":"contract|purchase|goods|delivery","s":["§ 433 BGB (Sales Contract)","§ 434 BGB (Material Defect)","§ 280 BGB (Damages)"]},
-      {"k":"damage|liability|unlawful|tort","s":["§ 823 BGB (Tortious Act)","§ 249 BGB (Damages)","§ 280 BGB (Breach of Duty)"]},
-      {"k":"withdrawal|revocation|deadlines","s":["§ 323 BGB (Withdrawal)","§ 355 BGB (Revocation)","§ 346 BGB (Restitution)"]}
+      {"k":"vertrag|kauf|ware|lieferung","s":["§ 433 BGB (Kaufvertrag)","§ 434 BGB (Sachmangel)","§ 280 BGB (Schadensersatz)"]},
+      {"k":"schaden|haftung|unerlaubt|delikt","s":["§ 823 BGB (Unerlaubte Handlung)","§ 249 BGB (Schadensersatz)","§ 280 BGB (Pflichtverletzung)"]},
+      {"k":"rücktritt|widerruf|fristen","s":["§ 323 BGB (Rücktritt)","§ 355 BGB (Widerruf)","§ 346 BGB (Rückgewähr)"]}
     ],
     "fallback":["§ 280 BGB","§ 433 BGB","§ 823 BGB"]
   },
   "templates":{
-    "de":"Dear Sir or Madam,\\n\\nI represent {{name}} (client no. {{no}}). Facts: {{facts}}.\\n\\nLegal basis: {{paras}}.\\n\\nSincerely,\\nAttorney Müller",
+    "de":"Sehr geehrte Damen und Herren,\\n\\nich vertrete {{name}} (Mandant-Nr. {{no}}). Zum Sachverhalt: {{facts}}.\\n\\nRechtsgrundlagen: {{paras}}.\\n\\nMit freundlichen Grüßen\\nRA Müller",
     "en":"Dear Sir or Madam,\\n\\nI represent {{name}} (client no. {{no}}). Facts: {{facts}}.\\n\\nLegal basis: {{paras}}.\\n\\nSincerely,\\nAttorney Müller",
-    "fr":"Dear Sir or Madam,\\n\\nI represent {{name}} (client no. {{no}}). Facts: {{facts}}.\\n\\nLegal basis: {{paras}}.\\n\\nSincerely,\\nAttorney Müller",
-    "es":"Dear Sir or Madam,\\n\\nI represent {{name}} (client no. {{no}}). Facts: {{facts}}.\\n\\nLegal basis: {{paras}}.\\n\\nSincerely,\\nAttorney Müller"
+    "fr":"Madame, Monsieur,\\n\\nJe représente {{name}} (n° client {{no}}). Faits: {{facts}}.\\n\\nBases juridiques: {{paras}}.\\n\\nCordialement,\\nAvocat Müller",
+    "es":"Estimados señores,\\n\\nRepresento a {{name}} (n.º cliente {{no}}). Hechos: {{facts}}.\\n\\nBase legal: {{paras}}.\\n\\nAtentamente,\\nAbogado Müller"
   }
 }</script>
 
+<!-- WebGL Monkey Overlay -->
 <div id="monkey"><canvas id="gl"></canvas></div>
 
 <script>
@@ -160,22 +160,22 @@ const client=()=>({no:$("clientNo").value.trim(),name:$("clientName").value.trim
 // WhatsApp
 $("btnWA").onclick=()=>{const c=client(), msg=encodeURIComponent($("waText").value.trim()); const p=c.no?`?text=${msg}%20(%23${c.no})`:`?text=${msg}`; $("btnWA").href=`https://wa.me/${""}${p}`;};
 // Seed
-$("btnSeed").onclick=()=>{ $("clientNo").value="47110815"; $("clientName").value="John Doe"; $("waText").value="Hello, I have a warranty case (defective goods)."; $("facts").value="I bought a smartphone on 2025-10-12. The device was defective (screen dead). Seller refuses subsequent performance.";};
+$("btnSeed").onclick=()=>{ $("clientNo").value="47110815"; $("clientName").value="Max Mustermann"; $("waText").value="Guten Tag, ich habe einen Gewährleistungsfall (Lieferung mangelhaft)."; $("facts").value="Ich kaufte am 12.10.2025 ein Smartphone. Das Gerät war defekt (Display, Totalausfall). Händler lehnt Nacherfüllung ab.";};
 // KI-Check via Regex
 $("btnAnalyze").onclick=()=>{
   const f=text().toLowerCase(); let hits=[];
   dsl.law.regex.forEach(r=>{if(new RegExp(r.k,"i").test(f))hits=hits.concat(r.s)});
   if(!hits.length)hits=dsl.law.fallback;
-  $("aiOut").innerHTML="Suggestion: "+hits.slice(0,3).join(", ");
+  $("aiOut").innerHTML="Vorschlag: "+hits.slice(0,3).join(", ");
   $("aiOut").dataset.paras=hits.slice(0,3).join(", ");
   // Easter egg trigger
-  if(/(^|\\b)monkey(\\b|!|\\.)/i.test(text())) startMonkey();
+  if(/(^|\\b)affe(\\b|!|\\.)/i.test(text())) startMonkey();
 };
 // Mustache-lite
 function tmpl(s,ctx){return s.replace(/\\{\\{\\s*([\\w.]+)\\s*\\}\\}/g,(_,k)=>ctx[k]??"")}
 $("btnGenLetter").onclick=()=>{
  const c=client(), lang=$("lang").value, paras=$("aiOut").dataset.paras||dsl.law.fallback.join(", ");
- $("letter").value=tmpl(dsl.templates[lang],{name:c.name||"Client",no:c.no||"—",facts:text(),paras});
+ $("letter").value=tmpl(dsl.templates[lang],{name:c.name||"Mandant",no:c.no||"—",facts:text(),paras});
 };
 // Signature canvas
 (function(){const cv=$("sign"),ctx=cv.getContext("2d");let d=false;cv.onpointerdown=e=>{d=true;ctx.beginPath();ctx.moveTo(e.offsetX,e.offsetY)};cv.onpointermove=e=>{if(!d)return;ctx.lineWidth=2;ctx.strokeStyle="#7efcff";ctx.lineTo(e.offsetX,e.offsetY);ctx.stroke()};["pointerup","pointerleave"].forEach(ev=>cv.addEventListener(ev,()=>d=false));$("btnClear").onclick=()=>{ctx.clearRect(0,0,cv.width,cv.height)}})();
@@ -186,9 +186,9 @@ async function aesKey(pass,salt){const enc=new TextEncoder();const keyMaterial=a
 async function encObj(pass,obj){const enc=new TextEncoder();const salt=crypto.getRandomValues(new Uint8Array(12));const iv=crypto.getRandomValues(new Uint8Array(12));const key=await aesKey(pass,salt);const data=enc.encode(JSON.stringify(obj));const c=await crypto.subtle.encrypt({name:"AES-GCM",iv},key,data);return {salt:b64(salt),iv:b64(iv),ct:b64(new Uint8Array(c))}}
 async function decObj(pass,blob){const dec=new TextDecoder();const salt=ub64(blob.salt),iv=ub64(blob.iv);const key=await aesKey(pass,salt);const p=await crypto.subtle.decrypt({name:"AES-GCM",iv},key,ub64(blob.ct));return JSON.parse(dec.decode(p))}
 $("btnSave").onclick=async()=>{
- const c=client(); if(!c.no){alert("Client number required!");return}
+ const c=client(); if(!c.no){alert("Mandantennummer erforderlich!");return}
  const rec={id:c.no, name:c.name,facts:$("facts").value,paras:$("aiOut").dataset.paras||"",ts:Date.now()}
- const blob=await encObj(c.no,rec); dbi=dbi||await idb(); await new Promise((r,rej)=>{const tx=dbi.transaction(STORE,"readwrite");tx.objectStore(STORE).put({id:c.no,payload:blob});tx.oncomplete=r;tx.onerror=rej}); alert("Saved (AES-GCM @ IndexedDB).")
+ const blob=await encObj(c.no,rec); dbi=dbi||await idb(); await new Promise((r,rej)=>{const tx=dbi.transaction(STORE,"readwrite");tx.objectStore(STORE).put({id:c.no,payload:blob});tx.oncomplete=r;tx.onerror=rej}); alert("Gespeichert (AES-GCM @ IndexedDB).")
 };
 // Minimal PDF builder with JPEG signature
 async function makePDF(text, sigDataURL){
@@ -215,9 +215,9 @@ async function makePDF(text, sigDataURL){
  return "data:application/pdf;base64,"+btoa(body+xref+trailer);
 }
 $("btnPDF").onclick=async()=>{
- const c=client(); const paras=$("aiOut").dataset.paras||dsl.law.fallback.join(", "); const letter=$("letter").value||tmpl(dsl.templates["en"],{name:c.name||"Client",no:c.no||"-",facts:text(),paras});
+ const c=client(); const paras=$("aiOut").dataset.paras||dsl.law.fallback.join(", "); const letter=$("letter").value||tmpl(dsl.templates["de"],{name:c.name||"Mandant",no:c.no||"-",facts:text(),paras});
  const pdf=await makePDF(letter,$("sign").toDataURL("image/jpeg",0.85)); $("pdfLink").href=pdf;
- const mailParam=new URLSearchParams(location.search).get("mail"); const subj=encodeURIComponent("Case File "+(c.no||""));
+ const mailParam=new URLSearchParams(location.search).get("mail"); const subj=encodeURIComponent("Mandat "+(c.no||""));
  $("mailLink").href=`mailto:?subject=${subj}&body=${encodeURIComponent("PDF (Data-URL):\\n"+pdf.substring(0,120)+"...")}`;
  if(mailParam==="1") location.href=$("mailLink").href;
 };
@@ -226,11 +226,11 @@ function sepaXML({iban,bic,cid,amt,debtor,ref}){
  const dt=new Date().toISOString(); const id="MNDT"+(debtor.no||"0000");
  return `<?xml version="1.0" encoding="UTF-8"?>
 <Document xmlns="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03">
-<CstmrCdtTrfInitn><GrpHdr><MsgId>${id}</MsgId><NbOfTxs>1</NbOfTxs><InitgPty><Nm>Law Firm</Nm></InitgPty></GrpHdr>
+<CstmrCdtTrfInitn><GrpHdr><MsgId>${id}</MsgId><NbOfTxs>1</NbOfTxs><InitgPty><Nm>Kanzlei</Nm></InitgPty></GrpHdr>
 <PmtInf><PmtInfId>${id}</PmtInfId><PmtMtd>TRF</PmtMtd><ReqdExctnDt>${dt.slice(0,10)}</ReqdExctnDt>
-<Dbtr><Nm>${debtor.name||"Client"}</Nm></Dbtr><DbtrAcct><Id><IBAN>${iban}</IBAN></Id></DbtrAcct><DbtrAgt><FinInstnId><BIC>${bic}</BIC></FinInstnId></DbtrAgt>
-<CdtTrfTxInf><PmtId><EndToEndId>${ref||"Invoice"}</EndToEndId></PmtId><Amt><InstdAmt Ccy="EUR">${amt}</InstdAmt></Amt>
-<Cdtr><Nm>Law Firm</Nm></Cdtr><CdtrAcct><Id><IBAN>${iban}</IBAN></Id></CdtrAcct><CdtrAgt><FinInstnId><BIC>${bic}</BIC></FinInstnId></CdtrAgt></CdtTrfTxInf>
+<Dbtr><Nm>${debtor.name||"Mandant"}</Nm></Dbtr><DbtrAcct><Id><IBAN>${iban}</IBAN></Id></DbtrAcct><DbtrAgt><FinInstnId><BIC>${bic}</BIC></FinInstnId></DbtrAgt>
+<CdtTrfTxInf><PmtId><EndToEndId>${ref||"Rechnung"}</EndToEndId></PmtId><Amt><InstdAmt Ccy="EUR">${amt}</InstdAmt></Amt>
+<Cdtr><Nm>Kanzlei</Nm></Cdtr><CdtrAcct><Id><IBAN>${iban}</IBAN></Id></CdtrAcct><CdtrAgt><FinInstnId><BIC>${bic}</BIC></FinInstnId></CdtrAgt></CdtTrfTxInf>
 </PmtInf></CstmrCdtTrfInitn></Document>`}
 function epcPayload(name,iban,amount){ // compact EPC-ish payload for demo
  return ["BCD","001","1","SCT", "", name, iban.replace(/\\s+/g,""), "EUR"+Number(amount).toFixed(2),"",""].join("\\n")}
@@ -240,8 +240,8 @@ function qrMatrix(s){ // tiny byte-mode QR (versions 1–3)
  finder(0,0);finder(size-7,0);finder(0,size-7);for(let i=8;i<size-8;i++){m[6][i]=i%2; m[i][6]=i%2}
  function place(bits){let dirUp=true,x=size-1,y=size-1,bi=0;while(x>0){if(x==6)x--;for(let i=0;i<size;i++){let Y=dirUp?y-i:i;for(let xi=0;xi<2;xi++){let X=x-xi;if(m[Y][X]==null){m[Y][X]=(bi<bits.length?bits[bi++]:0)^((X+Y)%2?1:0)}}}x-=2;dirUp=!dirUp}}
  let bits=[];for(let i=0;i<s.length;i++){const c=s.charCodeAt(i);for(let b=7;b>=0;b--)bits.push((c>>b)&1)}while(bits.length%8)bits.push(0);const capbits=(ver==1?152:ver==2?272:440);while(bits.length<capbits)bits=bits.concat([1,1,1,0,0,0,0,0]);place(bits);return m}
-$("btnSEPA").onclick=()=>{ const c=client(), xml=sepaXML({iban:$("iban").value,bic:$("bic").value,cid:$("cid").value,amt:$("amt").value,debtor:c,ref:"LAW-FIRM-INVOICE"}); $("sepaOut").value=xml; $("sepaDL").href=URL.createObjectURL(new Blob([xml],{type:"text/xml"}))}
-$("btnQR").onclick=()=>{const payload=epcPayload("LAW FIRM",$("iban").value,$("amt").value);const m=qrMatrix(payload);const ctx=$("qr").getContext("2d");const s=$("qr").width, n=m.length, k=Math.floor(s/n); ctx.fillStyle="#fff";ctx.fillRect(0,0,s,s); ctx.fillStyle="#000"; for(let y=0;y<n;y++)for(let x=0;x<n;x++) if(m[y][x]) ctx.fillRect(x*k,y*k,k,k) };
+$("btnSEPA").onclick=()=>{ const c=client(), xml=sepaXML({iban:$("iban").value,bic:$("bic").value,cid:$("cid").value,amt:$("amt").value,debtor:c,ref:"KANZLEI-RECHNUNG"}); $("sepaOut").value=xml; $("sepaDL").href=URL.createObjectURL(new Blob([xml],{type:"text/xml"}))}
+$("btnQR").onclick=()=>{const payload=epcPayload("KANZLEI",$("iban").value,$("amt").value);const m=qrMatrix(payload);const ctx=$("qr").getContext("2d");const s=$("qr").width, n=m.length, k=Math.floor(s/n); ctx.fillStyle="#fff";ctx.fillRect(0,0,s,s); ctx.fillStyle="#000"; for(let y=0;y<n;y++)for(let x=0;x<n;x++) if(m[y][x]) ctx.fillRect(x*k,y*k,k,k) };
 // Status wheel
 function pulse(el){el.style.filter="drop-shadow(0 0 12px #0ff)"; setTimeout(()=>el.style.filter="",600)}
 $("btnDraft").onclick=()=>pulse($("wheel")); $("btnReview").onclick=()=>pulse($("wheel")); $("btnSend").onclick=()=>pulse($("wheel"));
@@ -249,7 +249,7 @@ $("btnDraft").onclick=()=>pulse($("wheel")); $("btnReview").onclick=()=>pulse($(
 $("btnClip").onclick=async()=>{
  const cv=document.createElement("canvas"); cv.width=640; cv.height=360; const ctx=cv.getContext("2d");
  let t0=performance.now();
- function frame(t){const dt=(t-t0)/1000; ctx.fillStyle="#000"; ctx.fillRect(0,0,cv.width,cv.height); const grd=ctx.createLinearGradient(0,0,cv.width,cv.height); grd.addColorStop(0,"#19b5fe"); grd.addColorStop(1,"#7efcff"); ctx.fillStyle=grd; ctx.font="28px Arial"; ctx.fillText("Your case is with Attorney Müller",40,70); ctx.fillStyle="#9cf"; ctx.font="18px Arial"; ctx.fillText("Status: "+(dt<5?"Draft":dt<10?"Review":"Sent"),40,110); ctx.fillStyle="#234"; ctx.fillRect(40,140,560,20); ctx.fillStyle="#6ef"; ctx.fillRect(40,140,Math.min(560,(dt/15)*560),20); if(dt<15) requestAnimationFrame(frame)}
+ function frame(t){const dt=(t-t0)/1000; ctx.fillStyle="#000"; ctx.fillRect(0,0,cv.width,cv.height); const grd=ctx.createLinearGradient(0,0,cv.width,cv.height); grd.addColorStop(0,"#19b5fe"); grd.addColorStop(1,"#7efcff"); ctx.fillStyle=grd; ctx.font="28px Arial"; ctx.fillText("Ihr Fall ist bei RA Müller",40,70); ctx.fillStyle="#9cf"; ctx.font="18px Arial"; ctx.fillText("Status: "+(dt<5?"Entwurf":dt<10?"Prüfung":"Versand"),40,110); ctx.fillStyle="#234"; ctx.fillRect(40,140,560,20); ctx.fillStyle="#6ef"; ctx.fillRect(40,140,Math.min(560,(dt/15)*560),20); if(dt<15) requestAnimationFrame(frame)}
  requestAnimationFrame(frame);
  const stream=cv.captureStream(30); const rec=new MediaRecorder(stream,{mimeType:"video/webm"}); let chunks=[]; rec.ondataavailable=e=>chunks.push(e.data); rec.onstop=()=>{const blob=new Blob(chunks,{type:"video/webm"}); const url=URL.createObjectURL(blob); $("clip").src=url; const r=new FileReader(); r.onload=()=>{ $("clipDL").href=r.result }; r.readAsDataURL(blob); };
  rec.start(); setTimeout(()=>rec.stop(),15000);
