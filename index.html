@@ -1,0 +1,276 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The 7-Second Law Firm · CausaNova</title>
+<style>
+:root{--bg:#071125;--panel:#0d1f3a;--accent:#19b5fe;--accent2:#7efcff;--ok:#25d366;--warn:#ffce00;--err:#ff4266;--text:#e6f2ff;--mut:#99b3cc}
+*{box-sizing:border-box}html,body{height:100%}body{margin:0;font:14px/1.35 system-ui,Segoe UI,Roboto,Inter,Arial;background:radial-gradient(80% 120% at 10% 0%,#0b1b36 0%,#071125 35%,#050d1d 100%);color:var(--text)}
+a{color:var(--accent)}button{cursor:pointer}
+.container{max-width:980px;margin:0 auto;padding:18px}
+header{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:10px 0 4px;border-bottom:1px solid #102244}
+h1{margin:0;font-size:18px;letter-spacing:.3px;color:#bfe1ff;text-shadow:0 0 6px #0af}
+.badge{background:linear-gradient(90deg,#072 0,#0a4);border:1px solid #0b5;border-radius:12px;padding:4px 8px;color:#cfffdf}
+.grid{display:grid;gap:12px;grid-template-columns:1fr 1fr}
+.card{background:linear-gradient(180deg,rgba(14,31,58,.85),rgba(10,22,42,.85));border:1px solid #153060;border-radius:12px;padding:12px;box-shadow:0 8px 18px rgba(0,0,0,.25),inset 0 0 24px rgba(0,160,255,.08);position:relative}
+.card h3{margin:0 0 8px;font-size:15px;color:#cfe7ff}
+label{display:block;margin:8px 0 4px;color:#b5d2ff}
+input,select,textarea{width:100%;background:#0a1d37;border:1px solid #17407a;color:#e8f6ff;border-radius:8px;padding:8px 10px;outline:none}
+input:focus,textarea:focus{border-color:#2aa3ff;box-shadow:0 0 0 2px rgba(41,167,255,.2)}
+small.hint{color:var(--mut)}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.btn{background:linear-gradient(180deg,#11315a,#0d284b);border:1px solid #1e4f8a;color:#dff2ff;border-radius:10px;padding:8px 12px}
+.btn.ok{border-color:#1a7b4a;background:linear-gradient(180deg,#0f4,#0a3);color:#042}
+.btn.warn{border-color:#9a7b1a;background:linear-gradient(180deg,#fc0,#b80);color:#220}
+.btn.ghost{background:transparent;border-color:#2a5e9a}
+hr{border:none;height:1px;background:#14305f;margin:10px 0}
+.meta{opacity:.8;font-size:12px}
+/* 3D Status Rad */
+.status3d{perspective:800px;display:flex;align-items:center;justify-content:center;height:120px;margin:6px 0 0}
+.wheel{width:140px;height:140px;border-radius:50%;position:relative;transform-style:preserve-3d;animation:spin 6s linear infinite}
+.slice{position:absolute;top:0;left:0;width:100%;height:100%;border-radius:50%;box-shadow:inset 0 0 30px rgba(0,200,255,.3)}
+.slice:nth-child(1){background:conic-gradient(from 0deg,#19b5fe 0 120deg,transparent 0);transform:rotateX(70deg) translateZ(24px)}
+.slice:nth-child(2){background:conic-gradient(from 120deg,#7efcff 0 120deg,transparent 0);transform:rotateX(70deg) translateZ(12px)}
+.slice:nth-child(3){background:conic-gradient(from 240deg,#9bf 0 120deg,transparent 0);transform:rotateX(70deg) translateZ(0)}
+@keyframes spin{to{transform:rotateZ(-360deg)}}
+/* WebGL canvas hidden by default */
+#monkey{display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,.7)}
+#monkey canvas{width:100%;height:100%}
+/* neon lines */
+.card::before{content:"";position:absolute;inset:-1px;border-radius:12px;padding:1px;background:linear-gradient(135deg,transparent,rgba(0,180,255,.35),transparent);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
+</style></head>
+<body>
+<div class="container">
+<header>
+  <h1>⚖️ The 7-Second Law Firm <span class="badge">100% offline</span></h1>
+  <div class="row">
+    <button class="btn ghost" id="btnSeed">Seed</button>
+    <a class="btn ok" id="btnWA" target="_blank" rel="noopener">WhatsApp</a>
+  </div>
+</header>
+
+<div class="grid">
+  <div class="card">
+    <h3>Client Onboarding</h3>
+    <div class="row">
+      <div style="flex:1">
+        <label>Client Number</label>
+        <input id="clientNo" placeholder="e.g., 47110815">
+      </div>
+      <div style="flex:1">
+        <label>Name</label>
+        <input id="clientName" placeholder="John Doe">
+      </div>
+    </div>
+    <label>WhatsApp Template</label>
+    <input id="waText" value="Hello, I have a question about... (photos/attachments to follow).">
+    <small class="hint">Button above opens <code>wa.me</code> with this message.</small>
+    <label>Case Details (EN)</label>
+    <textarea id="facts" rows="5" placeholder="Please describe briefly..."></textarea>
+    <div class="row">
+      <button class="btn" id="btnAnalyze">AI Analysis</button>
+      <button class="btn" id="btnSave">Save (AES-GCM/IndexedDB)</button>
+      <button class="btn warn" id="btnEaster">Easter Egg</button>
+    </div>
+    <div id="aiOut" class="meta"></div>
+  </div>
+
+  <div class="card">
+    <h3>Document & eSign</h3>
+    <label>Language</label>
+    <select id="lang">
+      <option value="de">Deutsch</option>
+      <option value="en" selected>English</option>
+      <option value="fr">Français</option>
+      <option value="es">Español</option>
+    </select>
+    <label>Auto-Text (Mustache)</label>
+    <textarea id="letter" rows="8"></textarea>
+    <div class="row">
+      <button class="btn" id="btnGenLetter">Generate Text</button>
+      <button class="btn" id="btnPDF">Create PDF</button>
+    </div>
+    <canvas id="sign" width="500" height="160" style="background:#02132a;border:1px dashed #2a5e9a;border-radius:8px"></canvas>
+    <div class="row">
+      <button class="btn ghost" id="btnClear">Clear Signature</button>
+      <a id="pdfLink" class="btn" download="mandat.pdf">Save PDF</a>
+      <a id="mailLink" class="btn" target="_blank">Open E-Mail</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Payment · SEPA & QR</h3>
+    <div class="row">
+      <div style="flex:1"><label>IBAN (Law Firm)</label><input id="iban" value="DE89370400440532013000"></div>
+      <div style="flex:1"><label>BIC</label><input id="bic" value="COBADEFFXXX"></div>
+    </div>
+    <div class="row">
+      <div style="flex:2"><label>Creditor ID</label><input id="cid" value="DE98ZZZ09999999999"></div>
+      <div style="flex:1"><label>Amount (€)</label><input id="amt" value="299.00"></div>
+    </div>
+    <div class="row">
+      <button class="btn" id="btnSEPA">SEPA XML</button>
+      <button class="btn" id="btnQR">Generate QR</button>
+      <a id="sepaDL" class="btn" download="sepa.xml">Download XML</a>
+    </div>
+    <textarea id="sepaOut" rows="7" readonly></textarea>
+    <canvas id="qr" width="210" height="210" style="background:#fff;border-radius:8px"></canvas>
+  </div>
+
+  <div class="card">
+    <h3>Status Tracker & Video</h3>
+    <div class="status3d">
+      <div class="wheel" id="wheel"><div class="slice"></div><div class="slice"></div><div class="slice"></div></div>
+    </div>
+    <div class="row">
+      <button class="btn" id="btnDraft">Draft</button>
+      <button class="btn" id="btnReview">Review</button>
+      <button class="btn ok" id="btnSend">Sent</button>
+      <button class="btn" id="btnClip">15s Status Clip</button>
+      <a id="clipDL" class="btn" download="status.webm">Download Clip</a>
+    </div>
+    <video id="clip" controls style="width:100%;max-height:220px;background:#000;border-radius:8px"></video>
+  </div>
+</div>
+
+<script id="dsl" type="application/json">{
+  "law":{
+    "regex":[
+      {"k":"contract|purchase|goods|delivery","s":["§ 433 BGB (Sales Contract)","§ 434 BGB (Material Defect)","§ 280 BGB (Damages)"]},
+      {"k":"damage|liability|unlawful|tort","s":["§ 823 BGB (Tortious Act)","§ 249 BGB (Damages)","§ 280 BGB (Breach of Duty)"]},
+      {"k":"withdrawal|revocation|deadlines","s":["§ 323 BGB (Withdrawal)","§ 355 BGB (Revocation)","§ 346 BGB (Restitution)"]}
+    ],
+    "fallback":["§ 280 BGB","§ 433 BGB","§ 823 BGB"]
+  },
+  "templates":{
+    "de":"Dear Sir or Madam,\\n\\nI represent {{name}} (client no. {{no}}). Facts: {{facts}}.\\n\\nLegal basis: {{paras}}.\\n\\nSincerely,\\nAttorney Müller",
+    "en":"Dear Sir or Madam,\\n\\nI represent {{name}} (client no. {{no}}). Facts: {{facts}}.\\n\\nLegal basis: {{paras}}.\\n\\nSincerely,\\nAttorney Müller",
+    "fr":"Dear Sir or Madam,\\n\\nI represent {{name}} (client no. {{no}}). Facts: {{facts}}.\\n\\nLegal basis: {{paras}}.\\n\\nSincerely,\\nAttorney Müller",
+    "es":"Dear Sir or Madam,\\n\\nI represent {{name}} (client no. {{no}}). Facts: {{facts}}.\\n\\nLegal basis: {{paras}}.\\n\\nSincerely,\\nAttorney Müller"
+  }
+}</script>
+
+<div id="monkey"><canvas id="gl"></canvas></div>
+
+<script>
+"use strict";
+// helpers
+const $=id=>document.getElementById(id), dsl=JSON.parse($("dsl").textContent);
+const b64=a=>btoa(String.fromCharCode(...new Uint8Array(a))), ub64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+const text=()=>$("facts").value||"";
+const client=()=>({no:$("clientNo").value.trim(),name:$("clientName").value.trim()});
+// WhatsApp
+$("btnWA").onclick=()=>{const c=client(), msg=encodeURIComponent($("waText").value.trim()); const p=c.no?`?text=${msg}%20(%23${c.no})`:`?text=${msg}`; $("btnWA").href=`https://wa.me/${""}${p}`;};
+// Seed
+$("btnSeed").onclick=()=>{ $("clientNo").value="47110815"; $("clientName").value="John Doe"; $("waText").value="Hello, I have a warranty case (defective goods)."; $("facts").value="I bought a smartphone on 2025-10-12. The device was defective (screen dead). Seller refuses subsequent performance.";};
+// KI-Check via Regex
+$("btnAnalyze").onclick=()=>{
+  const f=text().toLowerCase(); let hits=[];
+  dsl.law.regex.forEach(r=>{if(new RegExp(r.k,"i").test(f))hits=hits.concat(r.s)});
+  if(!hits.length)hits=dsl.law.fallback;
+  $("aiOut").innerHTML="Suggestion: "+hits.slice(0,3).join(", ");
+  $("aiOut").dataset.paras=hits.slice(0,3).join(", ");
+  // Easter egg trigger
+  if(/(^|\\b)monkey(\\b|!|\\.)/i.test(text())) startMonkey();
+};
+// Mustache-lite
+function tmpl(s,ctx){return s.replace(/\\{\\{\\s*([\\w.]+)\\s*\\}\\}/g,(_,k)=>ctx[k]??"")}
+$("btnGenLetter").onclick=()=>{
+ const c=client(), lang=$("lang").value, paras=$("aiOut").dataset.paras||dsl.law.fallback.join(", ");
+ $("letter").value=tmpl(dsl.templates[lang],{name:c.name||"Client",no:c.no||"—",facts:text(),paras});
+};
+// Signature canvas
+(function(){const cv=$("sign"),ctx=cv.getContext("2d");let d=false;cv.onpointerdown=e=>{d=true;ctx.beginPath();ctx.moveTo(e.offsetX,e.offsetY)};cv.onpointermove=e=>{if(!d)return;ctx.lineWidth=2;ctx.strokeStyle="#7efcff";ctx.lineTo(e.offsetX,e.offsetY);ctx.stroke()};["pointerup","pointerleave"].forEach(ev=>cv.addEventListener(ev,()=>d=false));$("btnClear").onclick=()=>{ctx.clearRect(0,0,cv.width,cv.height)}})();
+// AES-GCM + IndexedDB
+const DB="kanzleiDB",STORE="cases"; let dbi;
+function idb(){return new Promise((res,rej)=>{const r=indexedDB.open(DB,1); r.onupgradeneeded=()=>r.result.createObjectStore(STORE,{keyPath:"id"}); r.onsuccess=()=>res(r.result); r.onerror=e=>rej(e)})}
+async function aesKey(pass,salt){const enc=new TextEncoder();const keyMaterial=await crypto.subtle.importKey("raw",enc.encode(pass),{name:"PBKDF2"},false,["deriveKey"]);return crypto.subtle.deriveKey({name:"PBKDF2",salt,iterations:250000,hash:"SHA-256"},keyMaterial,{name:"AES-GCM",length:256},false,["encrypt","decrypt"])}
+async function encObj(pass,obj){const enc=new TextEncoder();const salt=crypto.getRandomValues(new Uint8Array(12));const iv=crypto.getRandomValues(new Uint8Array(12));const key=await aesKey(pass,salt);const data=enc.encode(JSON.stringify(obj));const c=await crypto.subtle.encrypt({name:"AES-GCM",iv},key,data);return {salt:b64(salt),iv:b64(iv),ct:b64(new Uint8Array(c))}}
+async function decObj(pass,blob){const dec=new TextDecoder();const salt=ub64(blob.salt),iv=ub64(blob.iv);const key=await aesKey(pass,salt);const p=await crypto.subtle.decrypt({name:"AES-GCM",iv},key,ub64(blob.ct));return JSON.parse(dec.decode(p))}
+$("btnSave").onclick=async()=>{
+ const c=client(); if(!c.no){alert("Client number required!");return}
+ const rec={id:c.no, name:c.name,facts:$("facts").value,paras:$("aiOut").dataset.paras||"",ts:Date.now()}
+ const blob=await encObj(c.no,rec); dbi=dbi||await idb(); await new Promise((r,rej)=>{const tx=dbi.transaction(STORE,"readwrite");tx.objectStore(STORE).put({id:c.no,payload:blob});tx.oncomplete=r;tx.onerror=rej}); alert("Saved (AES-GCM @ IndexedDB).")
+};
+// Minimal PDF builder with JPEG signature
+async function makePDF(text, sigDataURL){
+ function w(s){chunks.push(typeof s=="string"?s: String.fromCharCode(...s));}
+ function o(id,body){offs[id]=len(chunks.join("")); w(id+" 0 obj\\n"+body+"\\nendobj\\n")}
+ const chunks=[], offs={}, len=s=>s.length; const enc=new TextEncoder();
+ const imgB64=(sigDataURL||"").split(",")[1]||""; const imgBin=ub64(imgB64);
+ const imgW=500,imgH=160;
+ const esc=t=>t.replace(/[()]/g,m=>"\\\\"+m);
+ const txtOps=`BT /F1 12 Tf 50 780 Td (${esc(text)}) Tj ET`;
+ const imgOps=`q 300 0 0 96 50 620 cm /Im1 Do Q`;
+ const stream=enc.encode(txtOps+"\\n"+(imgB64?imgOps:""));
+ const header="%PDF-1.4\\n"; w(header);
+ o("1","<< /Type /Catalog /Pages 2 0 R >>");
+ o("2","<< /Type /Pages /Kids [3 0 R] /Count 1 >>");
+ o("3","<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /ProcSet [/PDF /Text /ImageB /ImageC /ImageI] /Font << /F1 6 0 R >> "+(imgB64?"/XObject << /Im1 5 0 R >> ":"")+">> /Contents 4 0 R >>");
+ o("4","<< /Length "+stream.length+" >>\\nstream\\n"+String.fromCharCode(...stream)+"\\nendstream");
+ if(imgB64){ o("5","<< /Type /XObject /Subtype /Image /Width "+imgW+" /Height "+imgH+" /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length "+imgBin.length+" >>\\nstream\\n"+String.fromCharCode(...imgBin)+"\\nendstream"); }
+ o("6","<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>");
+ const body=chunks.join(""); const xrefPos=body.length;
+ let xref="xref\\n0 7\\n0000000000 65535 f \\n"; const ids=["1","2","3","4"];(imgB64?ids.push("5"):0),ids.push("6");
+ ids.forEach(id=>{let off=offs[id]; xref+=String(off).padStart(10,"0")+" 00000 n \\n"});
+ const trailer="trailer << /Size 7 /Root 1 0 R >>\\nstartxref\\n"+xrefPos+"\\n%%EOF";
+ return "data:application/pdf;base64,"+btoa(body+xref+trailer);
+}
+$("btnPDF").onclick=async()=>{
+ const c=client(); const paras=$("aiOut").dataset.paras||dsl.law.fallback.join(", "); const letter=$("letter").value||tmpl(dsl.templates["en"],{name:c.name||"Client",no:c.no||"-",facts:text(),paras});
+ const pdf=await makePDF(letter,$("sign").toDataURL("image/jpeg",0.85)); $("pdfLink").href=pdf;
+ const mailParam=new URLSearchParams(location.search).get("mail"); const subj=encodeURIComponent("Case File "+(c.no||""));
+ $("mailLink").href=`mailto:?subject=${subj}&body=${encodeURIComponent("PDF (Data-URL):\\n"+pdf.substring(0,120)+"...")}`;
+ if(mailParam==="1") location.href=$("mailLink").href;
+};
+// SEPA pain.001 + tiny EPC payload + minimal QR
+function sepaXML({iban,bic,cid,amt,debtor,ref}){
+ const dt=new Date().toISOString(); const id="MNDT"+(debtor.no||"0000");
+ return `<?xml version="1.0" encoding="UTF-8"?>
+<Document xmlns="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03">
+<CstmrCdtTrfInitn><GrpHdr><MsgId>${id}</MsgId><NbOfTxs>1</NbOfTxs><InitgPty><Nm>Law Firm</Nm></InitgPty></GrpHdr>
+<PmtInf><PmtInfId>${id}</PmtInfId><PmtMtd>TRF</PmtMtd><ReqdExctnDt>${dt.slice(0,10)}</ReqdExctnDt>
+<Dbtr><Nm>${debtor.name||"Client"}</Nm></Dbtr><DbtrAcct><Id><IBAN>${iban}</IBAN></Id></DbtrAcct><DbtrAgt><FinInstnId><BIC>${bic}</BIC></FinInstnId></DbtrAgt>
+<CdtTrfTxInf><PmtId><EndToEndId>${ref||"Invoice"}</EndToEndId></PmtId><Amt><InstdAmt Ccy="EUR">${amt}</InstdAmt></Amt>
+<Cdtr><Nm>Law Firm</Nm></Cdtr><CdtrAcct><Id><IBAN>${iban}</IBAN></Id></CdtrAcct><CdtrAgt><FinInstnId><BIC>${bic}</BIC></FinInstnId></CdtrAgt></CdtTrfTxInf>
+</PmtInf></CstmrCdtTrfInitn></Document>`}
+function epcPayload(name,iban,amount){ // compact EPC-ish payload for demo
+ return ["BCD","001","1","SCT", "", name, iban.replace(/\\s+/g,""), "EUR"+Number(amount).toFixed(2),"",""].join("\\n")}
+function qrMatrix(s){ // tiny byte-mode QR (versions 1–3)
+ s=s.toUpperCase();let ver=1,cap=[152,272,440];while(ver<4&&s.length*8>cap[ver-1])ver++;const size=17+4*ver,m=Array.from({length:size},_=>Array(size).fill(null));
+ function finder(x,y){for(let dy=-1;dy<=7;dy++)for(let dx=-1;dx<=7;dx++){let X=x+dx,Y=y+dy;let v=(dx>=0&&dx<=6&&dy>=0&&dy<=6&&((dx==0||dx==6||dy==0||dy==6)||(dx>=2&&dx<=4&&dy>=2&&dy<=4)))?1:0;if(X>=0&&Y>=0&&X<size&&Y<size)m[Y][X]=v}}
+ finder(0,0);finder(size-7,0);finder(0,size-7);for(let i=8;i<size-8;i++){m[6][i]=i%2; m[i][6]=i%2}
+ function place(bits){let dirUp=true,x=size-1,y=size-1,bi=0;while(x>0){if(x==6)x--;for(let i=0;i<size;i++){let Y=dirUp?y-i:i;for(let xi=0;xi<2;xi++){let X=x-xi;if(m[Y][X]==null){m[Y][X]=(bi<bits.length?bits[bi++]:0)^((X+Y)%2?1:0)}}}x-=2;dirUp=!dirUp}}
+ let bits=[];for(let i=0;i<s.length;i++){const c=s.charCodeAt(i);for(let b=7;b>=0;b--)bits.push((c>>b)&1)}while(bits.length%8)bits.push(0);const capbits=(ver==1?152:ver==2?272:440);while(bits.length<capbits)bits=bits.concat([1,1,1,0,0,0,0,0]);place(bits);return m}
+$("btnSEPA").onclick=()=>{ const c=client(), xml=sepaXML({iban:$("iban").value,bic:$("bic").value,cid:$("cid").value,amt:$("amt").value,debtor:c,ref:"LAW-FIRM-INVOICE"}); $("sepaOut").value=xml; $("sepaDL").href=URL.createObjectURL(new Blob([xml],{type:"text/xml"}))}
+$("btnQR").onclick=()=>{const payload=epcPayload("LAW FIRM",$("iban").value,$("amt").value);const m=qrMatrix(payload);const ctx=$("qr").getContext("2d");const s=$("qr").width, n=m.length, k=Math.floor(s/n); ctx.fillStyle="#fff";ctx.fillRect(0,0,s,s); ctx.fillStyle="#000"; for(let y=0;y<n;y++)for(let x=0;x<n;x++) if(m[y][x]) ctx.fillRect(x*k,y*k,k,k) };
+// Status wheel
+function pulse(el){el.style.filter="drop-shadow(0 0 12px #0ff)"; setTimeout(()=>el.style.filter="",600)}
+$("btnDraft").onclick=()=>pulse($("wheel")); $("btnReview").onclick=()=>pulse($("wheel")); $("btnSend").onclick=()=>pulse($("wheel"));
+// 15s status clip (runtime → Base64)
+$("btnClip").onclick=async()=>{
+ const cv=document.createElement("canvas"); cv.width=640; cv.height=360; const ctx=cv.getContext("2d");
+ let t0=performance.now();
+ function frame(t){const dt=(t-t0)/1000; ctx.fillStyle="#000"; ctx.fillRect(0,0,cv.width,cv.height); const grd=ctx.createLinearGradient(0,0,cv.width,cv.height); grd.addColorStop(0,"#19b5fe"); grd.addColorStop(1,"#7efcff"); ctx.fillStyle=grd; ctx.font="28px Arial"; ctx.fillText("Your case is with Attorney Müller",40,70); ctx.fillStyle="#9cf"; ctx.font="18px Arial"; ctx.fillText("Status: "+(dt<5?"Draft":dt<10?"Review":"Sent"),40,110); ctx.fillStyle="#234"; ctx.fillRect(40,140,560,20); ctx.fillStyle="#6ef"; ctx.fillRect(40,140,Math.min(560,(dt/15)*560),20); if(dt<15) requestAnimationFrame(frame)}
+ requestAnimationFrame(frame);
+ const stream=cv.captureStream(30); const rec=new MediaRecorder(stream,{mimeType:"video/webm"}); let chunks=[]; rec.ondataavailable=e=>chunks.push(e.data); rec.onstop=()=>{const blob=new Blob(chunks,{type:"video/webm"}); const url=URL.createObjectURL(blob); $("clip").src=url; const r=new FileReader(); r.onload=()=>{ $("clipDL").href=r.result }; r.readAsDataURL(blob); };
+ rec.start(); setTimeout(()=>rec.stop(),15000);
+};
+// Easter egg WebGL monkey (textured quad with 🐵)
+function startMonkey(){const wrap=$("monkey"); const c=$("gl"); wrap.style.display="block"; const gl=c.getContext("webgl"); c.width=innerWidth; c.height=innerHeight;
+ const vs=`attribute vec3 p;attribute vec2 u;varying vec2 v;uniform mat4 m;void main(){v=u;gl_Position=m*vec4(p,1.);}`;
+ const fs=`precision mediump float;varying vec2 v;uniform sampler2D tex;void main(){gl_FragColor=texture2D(tex,v);}`;
+ function sh(t,s){const o=gl.createShader(t); gl.shaderSource(o,s); gl.compileShader(o); return o}
+ const prog=gl.createProgram(); gl.attachShader(prog,sh(gl.VERTEX_SHADER,vs)); gl.attachShader(prog,sh(gl.FRAGMENT_SHADER,fs)); gl.linkProgram(prog); gl.useProgram(prog);
+ const verts=new Float32Array([-1,-1,0,  1,-1,0,  1,1,0,  -1,1,0]);
+ const uvs=new Float32Array([0,0, 1,0, 1,1, 0,1]); const idx=new Uint16Array([0,1,2,0,2,3]);
+ function buf(type,data,loc,size){const b=gl.createBuffer(); gl.bindBuffer(type,b); gl.bufferData(type,data,gl.STATIC_DRAW); if(loc>=0){gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc,size,gl.FLOAT,false,0,0)} return b}
+ const ap=gl.getAttribLocation(prog,"p"), au=gl.getAttribLocation(prog,"u"); buf(gl.ARRAY_BUFFER,verts,ap,3); buf(gl.ARRAY_BUFFER,uvs,au,2); buf(gl.ELEMENT_ARRAY_BUFFER,idx,-1,0);
+ const tex=gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D,tex); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
+ const ec=document.createElement("canvas"); ec.width=512; ec.height=512; const ex=ec.getContext("2d"); ex.fillStyle="#000"; ex.fillRect(0,0,512,512); ex.font="420px serif"; ex.textAlign="center"; ex.textBaseline="middle"; ex.fillText("🐵",256,300); const img=new Image(); img.onload=()=>{gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,img)}; img.src=ec.toDataURL();
+ const um=gl.getUniformLocation(prog,"m"); function mat(a){const c=Math.cos(a),s=Math.sin(a);return new Float32Array([c,0,s,0,  0,1,0,0,  -s,0,c,0,  0,0,0,1])}
+ function tick(t){gl.viewport(0,0,c.width,c.height); gl.clearColor(0,0,0,.7); gl.clear(gl.COLOR_BUFFER_BIT); gl.uniformMatrix4fv(um,false,mat(t*.001)); gl.drawElements(gl.TRIANGLES,6,gl.UNSIGNED_SHORT,0); requestAnimationFrame(tick)} requestAnimationFrame(tick);
+ wrap.onclick=()=>wrap.style.display="none";
+}
+$("btnEaster").onclick=startMonkey;
+</script>
+</div>
+</body></html>
