@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang='de'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<title>PIE Graph Viewer</title>
+<style>
+body{font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;margin:24px;max-width:1100px}
+svg{width:100%;height:520px;border:1px solid #e5e7eb;border-radius:8px;background:#fafafa}
+.node{stroke:#111827;fill:#ffffff}.edge{stroke:#6b7280;stroke-width:1.5}
+</style></head>
+<body>
+<h1>Path Identity Emulator — Graph</h1>
+<p>Standard lädt <code>../best_graph.json</code>. Oder eine eigene Datei wählen.</p>
+<div>Best Graph laden: <input id='pick' type='file' accept='.json'></div>
+<svg id='svg'></svg>
+<pre id='raw' style='white-space:pre-wrap;word-break:break-word;font-size:12px;color:#6b7280'></pre>
+<script>
+async function loadDefault(){
+  try{ const r=await fetch('../best_graph.json'); const js=await r.json(); render(js); }
+  catch(e){ document.getElementById('raw').textContent = 'best_graph.json nicht gefunden.'; }
+}
+document.getElementById('pick').addEventListener('change', async (e)=>{
+  const f=e.target.files[0]; if(!f) return; const js=JSON.parse(await f.text()); render(js);
+});
+function render(obj){
+  const g=obj.graph||obj; const nodes=g.nodes||[], edges=g.edges||[];
+  document.getElementById('raw').textContent = JSON.stringify(obj,null,2);
+  const svg=document.getElementById('svg'); svg.innerHTML='';
+  const W=svg.clientWidth, H=svg.clientHeight; const pad=50;
+  const src=nodes.filter(n=>n.type==='source'); const gate=nodes.filter(n=>n.type==='gate'); const sink=nodes.filter(n=>n.type==='sink');
+  const pos={};
+  function place(list,x){ const step=(H-2*pad)/Math.max(1,list.length-1); list.forEach((n,i)=>{pos[n.id]=[x,pad+i*step];});}
+  place(src, pad); place(gate, W/2); place(sink, W-pad);
+  edges.forEach(([u,v])=>{ const a=pos[u], b=pos[v]; if(!a||!b) return;
+    const e=document.createElementNS('http://www.w3.org/2000/svg','line');
+    e.setAttribute('x1',a[0]); e.setAttribute('y1',a[1]); e.setAttribute('x2',b[0]); e.setAttribute('y2',b[1]); e.setAttribute('class','edge'); svg.appendChild(e);
+  });
+  nodes.forEach(n=>{ const [x,y]=pos[n.id]||[Math.random()*W,Math.random()*H];
+    const g=document.createElementNS('http://www.w3.org/2000/svg','g');
+    const c=document.createElementNS('http://www.w3.org/2000/svg','circle'); c.setAttribute('cx',x); c.setAttribute('cy',y); c.setAttribute('r',18); c.setAttribute('class','node');
+    const t=document.createElementNS('http://www.w3.org/2000/svg','text'); t.setAttribute('x',x); t.setAttribute('y',y+4); t.setAttribute('text-anchor','middle'); t.setAttribute('font-size','12'); t.textContent=n.id;
+    g.appendChild(c); g.appendChild(t); svg.appendChild(g);
+  });
+}
+loadDefault();
+</script></body></html>

@@ -1,0 +1,110 @@
+{
+  "E": -5.0,
+  "graph": {
+    "nodes": [
+      {
+        "id": "S0",
+        "type": "source",
+        "tag": "S0"
+      },
+      {
+        "id": "S1",
+        "type": "source",
+        "tag": "S0"
+      },
+      {
+        "id": "S2",
+        "type": "source",
+        "tag": "S1"
+      },
+      {
+        "id": "S3",
+        "type": "source",
+        "tag": "S1"
+      },
+      {
+        "id": "G0",
+        "type": "gate",
+        "tag": null
+      },
+      {
+        "id": "G1",
+        "type": "gate",
+        "tag": null
+      },
+      {
+        "id": "G2",
+        "type": "gate",
+        "tag": null
+      },
+      {
+        "id": "G3",
+        "type": "gate",
+        "tag": null
+      },
+      {
+        "id": "K0",
+        "type": "sink",
+        "tag": null
+      },
+      {
+        "id": "K1",
+        "type": "sink",
+        "tag": null
+      }
+    ],
+    "edges": [
+      [
+        "S1",
+        "G0"
+      ],
+      [
+        "S2",
+        "G1"
+      ],
+      [
+        "S3",
+        "G1"
+      ],
+      [
+        "G2",
+        "K0"
+      ],
+      [
+        "G0",
+        "K1"
+      ],
+      [
+        "S0",
+        "K0"
+      ],
+      [
+        "S2",
+        "G0"
+      ],
+      [
+        "S0",
+        "G1"
+      ],
+      [
+        "G1",
+        "G2"
+      ],
+      [
+        "S1",
+        "G3"
+      ],
+      [
+        "S3",
+        "G3"
+      ],
+      [
+        "S3",
+        "G2"
+      ]
+    ]
+  },
+  "extras": {
+    "identity": 6.0
+  }
+}

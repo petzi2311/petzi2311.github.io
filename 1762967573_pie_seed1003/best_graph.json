@@ -1,0 +1,98 @@
+{
+  "E": -6.0,
+  "graph": {
+    "nodes": [
+      {
+        "id": "S0",
+        "type": "source",
+        "tag": "S0"
+      },
+      {
+        "id": "S1",
+        "type": "source",
+        "tag": "S1"
+      },
+      {
+        "id": "S2",
+        "type": "source",
+        "tag": "S0"
+      },
+      {
+        "id": "S3",
+        "type": "source",
+        "tag": "S1"
+      },
+      {
+        "id": "G0",
+        "type": "gate",
+        "tag": null
+      },
+      {
+        "id": "G1",
+        "type": "gate",
+        "tag": null
+      },
+      {
+        "id": "G2",
+        "type": "gate",
+        "tag": null
+      },
+      {
+        "id": "G3",
+        "type": "gate",
+        "tag": null
+      },
+      {
+        "id": "K0",
+        "type": "sink",
+        "tag": null
+      },
+      {
+        "id": "K1",
+        "type": "sink",
+        "tag": null
+      }
+    ],
+    "edges": [
+      [
+        "S0",
+        "G3"
+      ],
+      [
+        "S1",
+        "G2"
+      ],
+      [
+        "S2",
+        "G1"
+      ],
+      [
+        "S3",
+        "G3"
+      ],
+      [
+        "G3",
+        "K0"
+      ],
+      [
+        "G3",
+        "K1"
+      ],
+      [
+        "G2",
+        "G1"
+      ],
+      [
+        "S0",
+        "G2"
+      ],
+      [
+        "G3",
+        "G0"
+      ]
+    ]
+  },
+  "extras": {
+    "identity": 6.0
+  }
+}
