@@ -1,439 +1,416 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>OZG OnePager – Hundehaltung anmelden (Demo)</title>
-<style>
-  :root {
-    --bg:#0f1320; --card:#151a2e; --muted:#9aa4bf; --txt:#e8ecff; --accent:#7aa2ff; --ok:#3bd671; --warn:#ffcc66; --err:#ff6b6b;
-    --radius:16px;
-  }
-  *{box-sizing:border-box}
-  html,body{margin:0;padding:0;background:linear-gradient(180deg,#0f1320,#0b0e18);color:var(--txt);font:14px/1.5 system-ui,Segoe UI,Roboto,Arial}
-  header{position:sticky;top:0;z-index:5;background:rgba(10,14,24,.8);backdrop-filter:saturate(120%) blur(6px);border-bottom:1px solid #222}
-  .wrap{max-width:1100px;margin:0 auto;padding:18px}
-  h1{font-size:22px;margin:0 0 6px}
-  .sub{color:var(--muted);font-size:13px}
-  .toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:10px}
-  button,.btn{background:var(--card);color:var(--txt);border:1px solid #2a3253;border-radius:10px;padding:9px 12px;cursor:pointer}
-  button:hover,.btn:hover{border-color:var(--accent)}
-  .pill{padding:6px 10px;border-radius:999px;font-size:12px}
-  .ok{background:#173423;border-color:#2a6b4b;color:#b6ffcf}
-  .warn{background:#3a3216;border-color:#6d5a1f;color:#ffeab6}
-  main{padding:24px 0}
-  .grid{display:grid;grid-template-columns:1.2fr .8fr;gap:18px}
-  .card{background:var(--card);border:1px solid #222a45;border-radius:var(--radius);padding:16px}
-  .steps{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap}
-  .step{display:flex;align-items:center;gap:8px;background:#101425;border:1px solid #222a45;color:var(--muted);padding:8px 10px;border-radius:999px}
-  .step.active{color:var(--txt);border-color:var(--accent);box-shadow:0 0 0 2px rgba(122,162,255,.15) inset}
-  .step .n{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;background:#1c2342;color:#b9c6ff;font-weight:700}
-  .row{display:grid;grid-template-columns:repeat(12,1fr);gap:12px}
-  label{display:block;font-weight:600;margin:10px 0 6px}
-  input,select,textarea{width:100%;background:#0d1224;color:var(--txt);border:1px solid #283152;border-radius:10px;padding:10px}
-  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px rgba(122,162,255,.15)}
-  .hint{color:var(--muted);font-size:12px;margin-top:4px}
-  .actions{display:flex;gap:10px;justify-content:flex-end;margin-top:12px}
-  .errtxt{color:var(--err);font-size:12px;margin-top:4px}
-  .kv{display:grid;grid-template-columns:180px 1fr;gap:8px;font-size:13px}
-  .divider{height:1px;background:#222a45;margin:12px 0}
-  .badge{display:inline-block;border:1px dashed #375; border-radius:8px;padding:2px 8px;font-size:12px;color:#adf}
-  .list{display:flex;flex-direction:column;gap:6px}
-  .fileitem{display:flex;justify-content:space-between;align-items:center;background:#0d1224;border:1px solid #283152;border-radius:10px;padding:8px}
-  /* Print confirmation */
-  @media print {
-    body{background:#fff;color:#000}
-    header, .toolbar, .steps, #formPane, #rightPane .card:not(#confirmCard){display:none!important}
-    #confirmCard{border:none}
-  }
-  /* High-contrast mode toggled via .hc on body */
-  .hc :root{}
-  .hc body{background:#000;color:#fff}
-  .hc .card{background:#000;border-color:#fff}
-  .hc input,.hc select,.hc textarea{background:#000;color:#fff;border-color:#fff}
-  .hc .step{background:#000;border-color:#fff;color:#fff}
-  .hc .step.active{border-color:#0ff;box-shadow:none}
-</style>
+    <meta charset="UTF-8">
+    <title>PiT Hessen – Bedarfsermittlung & Teilhabeplanung</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header>
-  <div class="wrap">
-    <h1>OZG OnePager – Hundehaltung anmelden</h1>
-    <div class="sub">Vollständig clientseitig · Offline-fähig · JSON-Export · Druckbare Eingangsbestätigung · Demo ohne externe Libraries</div>
-    <div class="toolbar">
-      <span id="netState" class="pill ok">Status: Offline-fähig (Browser-Speicher)</span>
-      <button id="btnContrast" title="Hoher Kontrast umschalten">Kontrast</button>
-      <button id="btnFontUp" title="Schrift vergrößern">A+</button>
-      <button id="btnFontDown" title="Schrift verkleinern">A-</button>
-      <button id="btnExport">Export JSON</button>
-      <label class="btn" style="position:relative;overflow:hidden">
-        <input type="file" id="importFile" accept="application/json" style="position:absolute;inset:0;opacity:0;cursor:pointer"> Import JSON
-      </label>
+<header class="app-header">
+    <div class="app-header-title">
+        <h1>PiT Hessen</h1>
+        <p class="app-subtitle">Personenzentrierte integrierte Teilhabeplanung – Begleit-Tool</p>
     </div>
-  </div>
+    <div class="app-header-status">
+        <span id="stepIndicator">Schritt 1 von 15</span>
+        <span id="saveStatus" class="save-status">Nicht gespeichert</span>
+    </div>
 </header>
 
-<main class="wrap grid">
-  <section id="formPane" class="card">
-    <div class="steps" id="steps"></div>
-    <form id="theForm" novalidate></form>
-    <div class="actions">
-      <button id="prevBtn">Zurück</button>
-      <button id="nextBtn">Weiter</button>
-      <button id="submitBtn" style="display:none;background:linear-gradient(90deg,#3bd671,#7aa2ff);border:none;color:#06101a;font-weight:700">Verbindlich einreichen</button>
-    </div>
-  </section>
+<main class="app-layout">
+    <!-- Seitenleiste mit allen 15 Schritten -->
+    <nav class="sidebar">
+        <h2 class="sidebar-title">Prozessschritte</h2>
+        <ol id="stepList" class="step-list">
+            <!-- Wird durch JS gefüllt, aber du kannst auch statisch lassen -->
+            <li data-step="0" class="step-item active">1. Auftragsklärung</li>
+            <li data-step="1" class="step-item">2. Datenschutz & Einwilligung</li>
+            <li data-step="2" class="step-item">3. Erstgespräch</li>
+            <li data-step="3" class="step-item">4. PiT-Struktur</li>
+            <li data-step="4" class="step-item">5. Bedarfsanalyse</li>
+            <li data-step="5" class="step-item">6. Teilhabeziele</li>
+            <li data-step="6" class="step-item">7. Leistungen</li>
+            <li data-step="7" class="step-item">8. Abstimmung LE</li>
+            <li data-step="8" class="step-item">9. Dokumentation</li>
+            <li data-step="9" class="step-item">10. PiT-Prüfung</li>
+            <li data-step="10" class="step-item">11. Einreichung</li>
+            <li data-step="11" class="step-item">12. Rückfragen</li>
+            <li data-step="12" class="step-item">13. Gesamtplan</li>
+            <li data-step="13" class="step-item">14. Umsetzung</li>
+            <li data-step="14" class="step-item">15. Fortschreibung</li>
+        </ol>
+    </nav>
 
-  <aside id="rightPane" class="card">
-    <div class="kv">
-      <div>Prozess:</div><div><strong>Hundehaltung anmelden</strong> <span class="badge">OZG-Demo</span></div>
-      <div>Interne ID:</div><div><code id="procId">OZG-DEMO-HUND-001</code></div>
-      <div>Vorgangsnummer:</div><div><code id="vnr">–</code></div>
-      <div>Status:</div><div><span id="status">Entwurf</span></div>
-    </div>
-    <div class="divider"></div>
-    <div class="list" id="liveSummary"></div>
-  </aside>
+    <!-- Hauptbereich mit den Views -->
+    <section class="content">
+        <!-- Schritt 1 -->
+        <section class="view active" data-step="0">
+            <h2>1. Auftragsklärung & Zuständigkeitsprüfung</h2>
+            <p class="view-description">
+                Klären Sie, ob Eingliederungshilfe / Teilhabeleistungen nach SGB IX plausibel sind und
+                welche Rolle Sie als Dienstleister einnehmen.
+            </p>
+            <form class="view-form">
+                <div class="form-row">
+                    <label for="klient_name">Name der leistungsberechtigten Person</label>
+                    <input id="klient_name" name="klient_name" type="text" placeholder="Max Mustermann">
+                </div>
+                <div class="form-row">
+                    <label for="zustaendiger_traeger">Vermuteter zuständiger Träger</label>
+                    <input id="zustaendiger_traeger" name="zustaendiger_traeger" type="text" placeholder="z. B. LWV Hessen">
+                </div>
+                <div class="form-row">
+                    <label for="kurzbeschreibung_anliegen">Kurzbeschreibung des Anliegens</label>
+                    <textarea id="kurzbeschreibung_anliegen" name="kurzbeschreibung_anliegen" rows="4"
+                              placeholder="Worum geht es grob?"></textarea>
+                </div>
+                <div class="form-row">
+                    <label for="zustandigkeit_einschaetzung">Erste Einschätzung Zuständigkeit</label>
+                    <select id="zustandigkeit_einschaetzung" name="zustandigkeit_einschaetzung">
+                        <option value="">Bitte auswählen</option>
+                        <option value="eglh_plausibel">Eingliederungshilfe plausibel</option>
+                        <option value="anderer_traeger">Eher anderer Träger</option>
+                        <option value="unklar">Noch unklar</option>
+                    </select>
+                </div>
+            </form>
+        </section>
 
-  <section id="confirmCard" class="card" style="grid-column:1 / span 2;display:none">
-    <h2>Eingangsbestätigung (Demo) – Hundehaltung</h2>
-    <div id="confirmContent"></div>
-    <div class="actions" style="justify-content:flex-start">
-      <button onclick="window.print()">Drucken / PDF</button>
-      <button id="btnNew">Neuen Antrag starten</button>
-    </div>
-  </section>
+        <!-- Schritt 2 -->
+        <section class="view" data-step="1">
+            <h2>2. Datenschutz & Einwilligungen</h2>
+            <p class="view-description">
+                Transparente Information zur Datenverarbeitung und Einholung der erforderlichen Einwilligungen.
+            </p>
+            <form class="view-form">
+                <div class="form-row">
+                    <label for="info_datenschutz_erteilt">Datenschutzinfo erläutert?</label>
+                    <select id="info_datenschutz_erteilt" name="info_datenschutz_erteilt">
+                        <option value="">Bitte auswählen</option>
+                        <option value="ja">Ja</option>
+                        <option value="nein">Nein</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <label for="einwilligungen_partner">
+                        Einwilligung zur Kommunikation mit folgenden Stellen
+                    </label>
+                    <textarea id="einwilligungen_partner" name="einwilligungen_partner" rows="4"
+                              placeholder="z. B. LWV Hessen, Einrichtung XY, Hausarzt ..."></textarea>
+                </div>
+                <div class="form-row form-row-inline">
+                    <label for="schriftform_vorhanden">Schriftliche Einwilligung liegt vor?</label>
+                    <input id="schriftform_vorhanden" name="schriftform_vorhanden" type="checkbox">
+                </div>
+            </form>
+        </section>
+
+        <!-- Schritt 3 -->
+        <section class="view" data-step="2">
+            <h2>3. Erstgespräch zur Lebenssituation</h2>
+            <p class="view-description">
+                Ressourcenorientierte Bestandsaufnahme der aktuellen Lebenslage.
+            </p>
+            <form class="view-form">
+                <div class="form-row">
+                    <label for="wohnsituation">Wohnen / Lebensumfeld</label>
+                    <textarea id="wohnsituation" name="wohnsituation" rows="3"></textarea>
+                </div>
+                <div class="form-row">
+                    <label for="alltag_beschaeftigung">Alltag / Beschäftigung / Arbeit</label>
+                    <textarea id="alltag_beschaeftigung" name="alltag_beschaeftigung" rows="3"></textarea>
+                </div>
+                <div class="form-row">
+                    <label for="gesundheit">Gesundheit / besondere Bedarfe</label>
+                    <textarea id="gesundheit" name="gesundheit" rows="3"></textarea>
+                </div>
+                <div class="form-row">
+                    <label for="ressourcen">Ressourcen & Stärken</label>
+                    <textarea id="ressourcen" name="ressourcen" rows="3"></textarea>
+                </div>
+            </form>
+        </section>
+
+        <!-- Schritt 4 -->
+        <section class="view" data-step="3">
+            <h2>4. PiT-Struktur erläutern</h2>
+            <p class="view-description">
+                Erklären Sie Aufbau, Logik und Ziel des PiT als Instrument der Bedarfsermittlung und Teilhabeplanung.
+            </p>
+            <form class="view-form">
+                <div class="form-row">
+                    <label for="erklaerung_pit">Wie wurde PiT erklärt?</label>
+                    <textarea id="erklaerung_pit" name="erklaerung_pit" rows="4"
+                              placeholder="z. B. Lebensbereiche, Ziele, Maßnahmen, Gesamtplan ..."></textarea>
+                </div>
+                <div class="form-row">
+                    <label for="verstaendnis_klient">Verständnis aus Sicht der Person</label>
+                    <textarea id="verstaendnis_klient" name="verstaendnis_klient" rows="3"
+                              placeholder="z. B. Rückfragen, Unsicherheiten, Zustimmung ..."></textarea>
+                </div>
+            </form>
+        </section>
+
+        <!-- Schritt 5 -->
+        <section class="view" data-step="4">
+            <h2>5. Bedarfsanalyse in Lebensbereichen</h2>
+            <p class="view-description">
+                Systematische Erhebung von Unterstützungsbedarfen in den relevanten Lebensbereichen.
+            </p>
+            <form class="view-form">
+                <div class="form-grid">
+                    <div class="form-row">
+                        <label for="bedarf_wohnen">Bedarf: Wohnen</label>
+                        <textarea id="bedarf_wohnen" name="bedarf_wohnen" rows="3"></textarea>
+                    </div>
+                    <div class="form-row">
+                        <label for="bedarf_arbeit">Bedarf: Arbeit / Beschäftigung / Tagesstruktur</label>
+                        <textarea id="bedarf_arbeit" name="bedarf_arbeit" rows="3"></textarea>
+                    </div>
+                    <div class="form-row">
+                        <label for="bedarf_soziales">Bedarf: Soziale Beziehungen / Teilhabe</label>
+                        <textarea id="bedarf_soziales" name="bedarf_soziales" rows="3"></textarea>
+                    </div>
+                    <div class="form-row">
+                        <label for="bedarf_mobilitaet">Bedarf: Mobilität</label>
+                        <textarea id="bedarf_mobilitaet" name="bedarf_mobilitaet" rows="3"></textarea>
+                    </div>
+                    <div class="form-row">
+                        <label for="bedarf_gesundheit">Bedarf: Gesundheit / Pflege</label>
+                        <textarea id="bedarf_gesundheit" name="bedarf_gesundheit" rows="3"></textarea>
+                    </div>
+                </div>
+            </form>
+        </section>
+
+        <!-- Schritt 6 -->
+        <section class="view" data-step="5">
+            <h2>6. Teilhabeziele personenzentriert formulieren</h2>
+            <p class="view-description">
+                Ableitung von kurz-, mittel- und langfristigen Teilhabezielen aus Sicht der Person.
+            </p>
+            <form class="view-form">
+                <div class="form-row">
+                    <label for="ziele_kurzfristig">Kurzfristige Ziele (0–6 Monate)</label>
+                    <textarea id="ziele_kurzfristig" name="ziele_kurzfristig" rows="3"></textarea>
+                </div>
+                <div class="form-row">
+                    <label for="ziele_mittelfristig">Mittelfristige Ziele (6–24 Monate)</label>
+                    <textarea id="ziele_mittelfristig" name="ziele_mittelfristig" rows="3"></textarea>
+                </div>
+                <div class="form-row">
+                    <label for="ziele_langfristig">Langfristige Ziele (&gt; 24 Monate)</label>
+                    <textarea id="ziele_langfristig" name="ziele_langfristig" rows="3"></textarea>
+                </div>
+                <div class="form-row">
+                    <label for="eigenformulierung_klient">Originale Formulierungen der Person</label>
+                    <textarea id="eigenformulierung_klient" name="eigenformulierung_klient" rows="3"></textarea>
+                </div>
+            </form>
+        </section>
+
+        <!-- Schritt 7 -->
+        <section class="view" data-step="6">
+            <h2>7. Passende Unterstützungsleistungen ableiten</h2>
+            <p class="view-description">
+                Zuordnung von Leistungen der Eingliederungshilfe und ggf. anderer Leistungssysteme.
+            </p>
+            <form class="view-form">
+                <div class="form-row">
+                    <label for="leistungen_eglh">Vorgesehene Leistungen der Eingliederungshilfe</label>
+                    <textarea id="leistungen_eglh" name="leistungen_eglh" rows="4"></textarea>
+                </div>
+                <div class="form-row">
+                    <label for="leistungen_andere_traeger">Weitere Leistungssysteme (Reha, Pflege etc.)</label>
+                    <textarea id="leistungen_andere_traeger" name="leistungen_andere_traeger" rows="4"></textarea>
+                </div>
+            </form>
+        </section>
+
+        <!-- Schritt 8 -->
+        <section class="view" data-step="7">
+            <h2>8. Fachliche Abstimmung mit Leistungserbringern</h2>
+            <p class="view-description">
+                Klärung der Realisierbarkeit, Zuständigkeiten und Schnittstellen mit Einrichtungen/Diensten.
+            </p>
+            <form class="view-form">
+                <div class="form-row">
+                    <label for="leistungserbringer_beteiligt">Beteiligte Leistungserbringer</label>
+                    <textarea id="leistungserbringer_beteiligt" name="leistungserbringer_beteiligt" rows="3"></textarea>
+                </div>
+                <div class="form-row">
+                    <label for="abstimmung_ergebnis">Ergebnisse der Abstimmung</label>
+                    <textarea id="abstimmung_ergebnis" name="abstimmung_ergebnis" rows="4"></textarea>
+                </div>
+            </form>
+        </section>
+
+        <!-- Schritt 9 -->
+        <section class="view" data-step="8">
+            <h2>9. PiT-Dokumentation erstellen</h2>
+            <p class="view-description">
+                Zusammenfassung der Bedarfe, Ziele und Maßnahmen gemäß PiT-Struktur.
+            </p>
+            <form class="view-form">
+                <div class="form-row">
+                    <label for="pit_zusammenfassung">Freitext-Zusammenfassung für PiT</label>
+                    <textarea id="pit_zusammenfassung" name="pit_zusammenfassung" rows="6"></textarea>
+                </div>
+                <div class="form-row">
+                    <label for="pit_version">Interne Version / Bearbeitungsstand</label>
+                    <input id="pit_version" name="pit_version" type="text" placeholder="z. B. V1.0 / Entwurf">
+                </div>
+            </form>
+        </section>
+
+        <!-- Schritt 10 -->
+        <section class="view" data-step="9">
+            <h2>10. PiT mit leistungsberechtigter Person prüfen</h2>
+            <p class="view-description">
+                Durchsicht und Freigabe des PiT aus Sicht der leistungsberechtigten Person.
+            </p>
+            <form class="view-form">
+                <div class="form-row">
+                    <label for="rueckmeldung_klient">Rückmeldungen der Person</label>
+                    <textarea id="rueckmeldung_klient" name="rueckmeldung_klient" rows="4"></textarea>
+                </div>
+                <div class="form-row form-row-inline">
+                    <label for="pit_freigabe">PiT-Inhalt freigegeben?</label>
+                    <input id="pit_freigabe" name="pit_freigabe" type="checkbox">
+                </div>
+            </form>
+        </section>
+
+        <!-- Schritt 11 -->
+        <section class="view" data-step="10">
+            <h2>11. Einreichung beim Kostenträger</h2>
+            <p class="view-description">
+                Versand des abgestimmten PiT an den zuständigen Kostenträger.
+            </p>
+            <form class="view-form">
+                <div class="form-row">
+                    <label for="einreichung_art">Art der Einreichung</label>
+                    <select id="einreichung_art" name="einreichung_art">
+                        <option value="">Bitte auswählen</option>
+                        <option value="onlineportal">Online-Portal</option>
+                        <option value="email">E-Mail</option>
+                        <option value="post">Post</option>
+                        <option value="persoenlich">Persönliche Übergabe</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <label for="einreichung_datum">Datum der Einreichung</label>
+                    <input id="einreichung_datum" name="einreichung_datum" type="date">
+                </div>
+            </form>
+        </section>
+
+        <!-- Schritt 12 -->
+        <section class="view" data-step="11">
+            <h2>12. Klärung von Rückfragen / Ergänzungen</h2>
+            <p class="view-description">
+                Dokumentation von Rückfragen des Kostenträgers und Ihren Antworten.
+            </p>
+            <form class="view-form">
+                <div class="form-row">
+                    <label for="rueckfragen_kostentraeger">Rückfragen des Kostenträgers</label>
+                    <textarea id="rueckfragen_kostentraeger" name="rueckfragen_kostentraeger" rows="4"></textarea>
+                </div>
+                <div class="form-row">
+                    <label for="antworten_rueckfragen">Ihre Antworten / Ergänzungen</label>
+                    <textarea id="antworten_rueckfragen" name="antworten_rueckfragen" rows="4"></textarea>
+                </div>
+            </form>
+        </section>
+
+        <!-- Schritt 13 -->
+        <section class="view" data-step="12">
+            <h2>13. Gesamtplan & Leistungsbescheid</h2>
+            <p class="view-description">
+                Erfassung von Ergebnissen des Gesamtplanverfahrens und wichtigen Parametern des Bescheids.
+            </p>
+            <form class="view-form">
+                <div class="form-row">
+                    <label for="gesamtplan_kernpunkte">Kernpunkte des Gesamtplans</label>
+                    <textarea id="gesamtplan_kernpunkte" name="gesamtplan_kernpunkte" rows="4"></textarea>
+                </div>
+                <div class="form-row">
+                    <label for="bescheid_datum">Datum des Bescheids</label>
+                    <input id="bescheid_datum" name="bescheid_datum" type="date">
+                </div>
+                <div class="form-row">
+                    <label for="bewilligte_leistungen">Bewilligte Leistungen (Kurzfassung)</label>
+                    <textarea id="bewilligte_leistungen" name="bewilligte_leistungen" rows="3"></textarea>
+                </div>
+            </form>
+        </section>
+
+        <!-- Schritt 14 -->
+        <section class="view" data-step="13">
+            <h2>14. Umsetzungsbegleitung & Koordination</h2>
+            <p class="view-description">
+                Begleitung beim Start und in der laufenden Umsetzung der bewilligten Leistungen.
+            </p>
+            <form class="view-form">
+                <div class="form-row">
+                    <label for="start_umsetzung">Start der Leistungsumsetzung</label>
+                    <input id="start_umsetzung" name="start_umsetzung" type="date">
+                </div>
+                <div class="form-row">
+                    <label for="umsetzung_bemerkungen">Beobachtungen / Hinweise aus der Praxis</label>
+                    <textarea id="umsetzung_bemerkungen" name="umsetzung_bemerkungen" rows="4"></textarea>
+                </div>
+            </form>
+        </section>
+
+        <!-- Schritt 15 -->
+        <section class="view" data-step="14">
+            <h2>15. Regelmäßige Überprüfung & Fortschreibung</h2>
+            <p class="view-description">
+                Dokumentation von Überprüfungen, Zielerreichung und Anpassungsbedarf.
+            </p>
+            <form class="view-form">
+                <div class="form-row">
+                    <label for="fortschreibung_zeitpunkt">Zeitpunkt der letzten / nächsten Überprüfung</label>
+                    <input id="fortschreibung_zeitpunkt" name="fortschreibung_zeitpunkt" type="date">
+                </div>
+                <div class="form-row">
+                    <label for="zielerreichung_einschaetzung">Einschätzung der Zielerreichung</label>
+                    <textarea id="zielerreichung_einschaetzung" name="zielerreichung_einschaetzung" rows="4"></textarea>
+                </div>
+                <div class="form-row">
+                    <label for="anpassungsbedarf">Anpassungsbedarf / neue Ziele</label>
+                    <textarea id="anpassungsbedarf" name="anpassungsbedarf" rows="4"></textarea>
+                </div>
+            </form>
+        </section>
+
+        <!-- Navigation unten -->
+        <footer class="nav-footer">
+            <button id="prevBtn" class="nav-btn" type="button">◀ Zurück</button>
+            <div class="nav-footer-middle">
+                <button id="saveBtn" class="nav-btn nav-btn-secondary" type="button">Zwischenspeichern</button>
+                <button id="exportBtn" class="nav-btn nav-btn-secondary" type="button">JSON exportieren</button>
+            </div>
+            <button id="nextBtn" class="nav-btn nav-btn-primary" type="button">Weiter ▶</button>
+        </footer>
+    </section>
 </main>
 
-<script>
-/* ------------------------ Mini “DSL” / Schema ------------------------ */
-const PROCESS = {
-  id: "OZG-DEMO-HUND-001",
-  steps: [
-    { key:"ident", name:"1. Identität", fields:[
-      {key:"vorname", label:"Vorname", type:"text", required:true},
-      {key:"nachname", label:"Nachname", type:"text", required:true},
-      {key:"geburtsdatum", label:"Geburtsdatum", type:"date", required:true},
-      {key:"strasse", label:"Straße & Hausnr.", type:"text", required:true},
-      {key:"plz", label:"PLZ", type:"text", pattern:"^[0-9]{5}$", required:true, hint:"5-stellige Postleitzahl"},
-      {key:"ort", label:"Ort", type:"text", required:true},
-      {key:"email", label:"E-Mail für Rückfragen", type:"email", required:true},
-      {key:"telefon", label:"Telefon (optional)", type:"tel"}
-    ]},
-    { key:"hund", name:"2. Hundedaten", fields:[
-      {key:"hund_name", label:"Name des Hundes", type:"text", required:true},
-      {key:"rasse", label:"Rasse", type:"text", required:true},
-      {key:"geb_hund", label:"Geburtsdatum des Hundes", type:"date"},
-      {key:"chip", label:"Transponder-/Chipnummer", type:"text", required:true, pattern:"^[0-9A-Za-z]{10,20}$", hint:"10–20 Zeichen, Buchstaben/Ziffern"},
-      {key:"versicherung", label:"Hundehalter-Haftpflicht vorhanden", type:"select", required:true, options:["Ja","Nein"]},
-      {key:"impfung", label:"Tollwutimpfung gültig bis", type:"date", required:true}
-    ]},
-    { key:"uploads", name:"3. Nachweise", fields:[
-      {key:"u_versicherung", label:"Police Haftpflicht (PDF/JPG)", type:"file", accept:".pdf,.jpg,.jpeg,.png"},
-      {key:"u_impfung", label:"Impfausweis-Seite (PDF/JPG)", type:"file", accept:".pdf,.jpg,.jpeg,.png"},
-      {key:"datenschutz", label:"Datenschutzhinweise gelesen & akzeptiert", type:"checkbox", required:true}
-    ]},
-    { key:"review", name:"4. Prüfen & Absenden", fields:[
-      {key:"bestaetigung", label:"Ich bestätige die Richtigkeit meiner Angaben", type:"checkbox", required:true},
-      {key:"sign", label:"Elektronische Unterschrift (vollständiger Name)", type:"text", required:true, minLength:5}
-    ]}
-  ]
-};
-
-/* ------------------------ State & Storage ------------------------ */
-const $ = sel => document.querySelector(sel);
-const form = $("#theForm");
-const stepsBar = $("#steps");
-const statusSpan = $("#status");
-const vnrEl = $("#vnr");
-const liveSummary = $("#liveSummary");
-const confirmCard = $("#confirmCard");
-const confirmContent = $("#confirmContent");
-const submitBtn = $("#submitBtn");
-const nextBtn = $("#nextBtn");
-const prevBtn = $("#prevBtn");
-const netState = $("#netState");
-
-let currentStep = 0;
-let state = loadState() || { id:PROCESS.id, data:{}, files:{}, vnr:null, status:"Entwurf" };
-
-function loadState(){
-  try{ return JSON.parse(localStorage.getItem("ozg_demo_state")); }catch{ return null; }
-}
-function saveState(){ localStorage.setItem("ozg_demo_state", JSON.stringify(state)); }
-
-/* IndexedDB for files */
-let idb, filesStore;
-const DB_NAME="ozg_demo_db", STORE="files";
-function openDB(){
-  return new Promise((res,rej)=>{
-    const req = indexedDB.open(DB_NAME,1);
-    req.onupgradeneeded = () => {
-      const db = req.result;
-      if(!db.objectStoreNames.contains(STORE)) db.createObjectStore(STORE);
-    };
-    req.onsuccess = ()=>{ idb=req.result; filesStore = ()=>idb.transaction(STORE,"readwrite").objectStore(STORE); res(); };
-    req.onerror = ()=>rej(req.error);
-  });
-}
-openDB().catch(()=>console.warn("IndexedDB not available, fallback to memory"));
-
-/* ------------------------ UI Rendering ------------------------ */
-function renderSteps(){
-  stepsBar.innerHTML = "";
-  PROCESS.steps.forEach((s,i)=>{
-    const el = document.createElement("div");
-    el.className = "step"+(i===currentStep?" active":"");
-    el.innerHTML = `<span class="n">${i+1}</span> <span>${s.name}</span>`;
-    stepsBar.appendChild(el);
-  });
-}
-function renderForm(){
-  form.innerHTML = "";
-  const step = PROCESS.steps[currentStep];
-  step.fields.forEach(f=>{
-    const wrap = document.createElement("div");
-    wrap.className = "row";
-    wrap.style.marginBottom="6px";
-    wrap.innerHTML = `
-      <div style="grid-column: span 12">
-        <label for="${f.key}">${f.label}${f.required? " *":""}</label>
-        ${fieldHTML(f)}
-        ${f.hint? `<div class="hint">${f.hint}</div>`:""}
-        <div class="errtxt" id="err_${f.key}" style="display:none"></div>
-      </div>`;
-    form.appendChild(wrap);
-    initFieldBehavior(f);
-  });
-  prevBtn.style.visibility = currentStep>0? "visible":"hidden";
-  nextBtn.style.display = currentStep<PROCESS.steps.length-1? "inline-block":"none";
-  submitBtn.style.display = currentStep===PROCESS.steps.length-1? "inline-block":"none";
-}
-function fieldHTML(f){
-  const val = state.data[f.key] ?? "";
-  if(f.type==="select"){
-    const opts = ["","..."].concat(f.options||[]);
-    return `<select id="${f.key}" name="${f.key}" ${f.required?"required":""}>
-      ${opts.map(o=>`<option ${o===val?"selected":""} value="${o===""?"":o}">${o===""?"Bitte wählen":o}</option>`).join("")}
-    </select>`;
-  }
-  if(f.type==="textarea"){
-    return `<textarea id="${f.key}" rows="4" ${f.required?"required":""}>${val}</textarea>`;
-  }
-  if(f.type==="checkbox"){
-    const checked = (val===true||val==="true")? "checked":"";
-    return `<input type="checkbox" id="${f.key}" ${checked}>`;
-  }
-  if(f.type==="file"){
-    const count = (state.files[f.key]?.length)||0;
-    return `<input type="file" id="${f.key}" ${f.accept?`accept="${f.accept}"`:""} ${f.multiple?"multiple":""}>
-            <div class="hint">Gespeicherte Dateien: <span id="fc_${f.key}">${count}</span></div>`;
-  }
-  const extra = [];
-  if(f.pattern) extra.push(`pattern="${f.pattern}"`);
-  if(f.minLength) extra.push(`minlength="${f.minLength}"`);
-  return `<input id="${f.key}" type="${f.type||"text"}" value="${String(val)}" ${f.required?"required":""} ${extra.join(" ")}>`;
-}
-function initFieldBehavior(f){
-  const el = $("#"+f.key);
-  if(!el) return;
-  const setErr=(msg)=>{ const e=$("#err_"+f.key); if(!e) return; e.textContent=msg||""; e.style.display=msg?"block":"none"; };
-  if(f.type==="file"){
-    el.addEventListener("change", async ev=>{
-      const files = Array.from(ev.target.files||[]);
-      if(!files.length) return;
-      const saved = [];
-      for(const file of files){
-        const buf = await file.arrayBuffer();
-        const blob = new Blob([buf], {type:file.type||"application/octet-stream"});
-        const id = `${f.key}:${Date.now()}:${Math.random().toString(36).slice(2,7)}`;
-        try{
-          if(filesStore) filesStore().put(blob, id);
-          else { /* fallback */ state.files._mem = state.files._mem||{}; state.files._mem[id]=blob; }
-          saved.push({id,name:file.name,type:file.type,size:file.size});
-        }catch(e){ console.error(e); }
-      }
-      state.files[f.key] = (state.files[f.key]||[]).concat(saved);
-      $("#fc_"+f.key).textContent = state.files[f.key].length;
-      saveState(); renderUploadsSummary();
-    });
-  } else if (f.type==="checkbox"){
-    el.addEventListener("change",()=>{ state.data[f.key]=el.checked; saveState(); renderSummary(); });
-  } else {
-    el.addEventListener("input", ()=>{ state.data[f.key]=el.value; saveState(); renderSummary(); validateOne(f, el, setErr); });
-  }
-  // initial validate
-  if(f.type!=="file") validateOne(f, el, setErr, false);
-}
-function validateOne(f, el, setErr, show=true){
-  let ok = true, msg="";
-  if(f.required){
-    if(f.type==="checkbox"){ ok = !!el.checked; if(!ok) msg="Erforderlich."; }
-    else { ok = !!String(el.value||"").trim(); if(!ok) msg="Erforderlich."; }
-  }
-  if(ok && f.pattern && el.value){
-    const re = new RegExp(f.pattern); ok = re.test(el.value); if(!ok) msg="Format ungültig.";
-  }
-  if(ok && f.minLength){ if((el.value||"").length<f.minLength){ ok=false; msg=`Mindestens ${f.minLength} Zeichen.`; } }
-  setErr(show?msg:"");
-  return ok;
-}
-function validateStep(){
-  const step = PROCESS.steps[currentStep];
-  let allOk = true;
-  step.fields.forEach(f=>{
-    const el = $("#"+f.key);
-    if(!el) return;
-    const setErr=(msg)=>{ const e=$("#err_"+f.key); if(!e) return; e.textContent=msg||""; e.style.display=msg?"block":"none"; };
-    const ok = validateOne(f, el, setErr, true);
-    allOk = allOk && ok;
-  });
-  return allOk;
-}
-function renderSummary(){
-  const d = state.data;
-  liveSummary.innerHTML = `
-    <div><strong>Zusammenfassung</strong></div>
-    <div class="divider"></div>
-    <div class="kv">
-      <div>Halter:</div><div>${esc(d.vorname)} ${esc(d.nachname)||""}</div>
-      <div>Adresse:</div><div>${esc(d.strasse)||""}, ${esc(d.plz)||""} ${esc(d.ort)||""}</div>
-      <div>E-Mail:</div><div>${esc(d.email)||"–"}</div>
-      <div>Hund:</div><div>${esc(d.hund_name)||"–"} (${esc(d.rasse)||"–"})</div>
-      <div>Chip:</div><div>${esc(d.chip)||"–"}</div>
-      <div>Haftpflicht:</div><div>${esc(d.versicherung)||"–"}</div>
-      <div>Impfung gültig bis:</div><div>${esc(d.impfung)||"–"}</div>
+<!-- Simples JSON-Dump-Modal -->
+<div id="exportModal" class="modal hidden">
+    <div class="modal-dialog">
+        <header class="modal-header">
+            <h3>JSON-Export (PiT-Daten)</h3>
+            <button id="closeModalBtn" class="modal-close" type="button">×</button>
+        </header>
+        <section class="modal-body">
+            <textarea id="exportOutput" readonly></textarea>
+        </section>
     </div>
-    <div class="divider"></div>
-    <div><strong>Uploads</strong></div>
-    <div id="uploadsSum" class="list"></div>
-  `;
-  renderUploadsSummary();
-}
-function renderUploadsSummary(){
-  const box = $("#uploadsSum");
-  if(!box) return;
-  box.innerHTML = "";
-  const all = Object.entries(state.files||{});
-  if(!all.length){ box.innerHTML = `<div class="hint">Keine Dateien gespeichert.</div>`; return; }
-  all.forEach(([k,arr])=>{
-    if(k==="_mem") return;
-    (arr||[]).forEach(meta=>{
-      const row = document.createElement("div");
-      row.className="fileitem";
-      row.innerHTML = `<span>${meta.name} <span class="hint">(${meta.type||"Datei"}, ${fmtSize(meta.size)})</span></span>
-                       <button data-id="${meta.id}" data-key="${k}">Entfernen</button>`;
-      row.querySelector("button").addEventListener("click", async (ev)=>{
-        const id = ev.target.getAttribute("data-id");
-        const key = ev.target.getAttribute("data-key");
-        try{ if(filesStore) filesStore().delete(id); else if(state.files._mem) delete state.files._mem[id]; }catch{}
-        state.files[key] = (state.files[key]||[]).filter(x=>x.id!==id);
-        saveState(); renderSummary();
-      });
-      box.appendChild(row);
-    });
-  });
-}
+</div>
 
-/* ------------------------ Navigation ------------------------ */
-prevBtn.addEventListener("click",e=>{ e.preventDefault(); if(currentStep>0){ currentStep--; persistUI(); }});
-nextBtn.addEventListener("click",e=>{ e.preventDefault(); if(validateStep()){ currentStep++; persistUI(); }});
-submitBtn.addEventListener("click",e=>{
-  e.preventDefault();
-  if(!validateStep()) return;
-  // basic plausibility: impfung in zukunft
-  const impf = state.data.impfung? new Date(state.data.impfung):null;
-  if(impf && impf < new Date()){ alert("Achtung: Die Tollwutimpfung scheint abgelaufen zu sein."); }
-  state.vnr = "HZ-"+Date.now().toString(36).toUpperCase();
-  state.status = "Eingereicht";
-  saveState();
-  showConfirmation();
-});
-
-function persistUI(){
-  renderSteps(); renderForm(); renderSummary();
-  window.scrollTo({top:0,behavior:"smooth"});
-}
-
-/* ------------------------ Confirmation / Print ------------------------ */
-function showConfirmation(){
-  vnrEl.textContent = state.vnr || "–";
-  statusSpan.textContent = state.status;
-  confirmCard.style.display = "block";
-  document.querySelector("#rightPane").scrollIntoView({behavior:"smooth"});
-
-  const d = state.data;
-  confirmContent.innerHTML = `
-    <div class="kv">
-      <div>Vorgangsnummer</div><div><strong>${esc(state.vnr)}</strong></div>
-      <div>Eingangsdatum</div><div>${new Date().toLocaleString()}</div>
-      <div>Prozess</div><div>Hundehaltung anmelden</div>
-      <div>Halter</div><div>${esc(d.vorname)} ${esc(d.nachname)}, ${esc(d.strasse)}, ${esc(d.plz)} ${esc(d.ort)}</div>
-      <div>Hund</div><div>${esc(d.hund_name)} (${esc(d.rasse)}), Chip: ${esc(d.chip)}</div>
-      <div>Kontakt</div><div>${esc(d.email)} ${d.telefon?"/ "+esc(d.telefon):""}</div>
-      <div>Versicherung</div><div>${esc(d.versicherung)||"–"}</div>
-      <div>Impfung gültig bis</div><div>${esc(d.impfung)||"–"}</div>
-      <div>Erklärung</div><div>Ich bestätige die Richtigkeit meiner Angaben: <em>${esc(d.sign)||"–"}</em></div>
-    </div>
-    <div class="divider"></div>
-    <div class="hint">Dies ist eine Demo-Eingangsbestätigung. Keine echte behördliche Entscheidung.</div>
-  `;
-}
-
-/* ------------------------ Export / Import ------------------------ */
-$("#btnExport").addEventListener("click", ()=>{
-  const payload = JSON.stringify(state, null, 2);
-  const blob = new Blob([payload], {type:"application/json"});
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = (state.vnr||"ozg_antrag_entwurf") + ".json";
-  a.click();
-  URL.revokeObjectURL(a.href);
-});
-$("#importFile").addEventListener("change", async (e)=>{
-  const f = e.target.files[0]; if(!f) return;
-  try{
-    const txt = await f.text();
-    const data = JSON.parse(txt);
-    if(!data || data.id!==PROCESS.id) throw new Error("Falscher Prozess / Datei beschädigt.");
-    state = data; saveState();
-    statusSpan.textContent = state.status||"Entwurf";
-    vnrEl.textContent = state.vnr||"–";
-    currentStep = 0; persistUI();
-    alert("Import erfolgreich.");
-  }catch(err){ alert("Import fehlgeschlagen: "+err.message); }
-});
-
-/* ------------------------ A11y / UI Tweaks ------------------------ */
-$("#btnContrast").addEventListener("click", ()=>{ document.body.classList.toggle("hc"); });
-let fsize = 14;
-$("#btnFontUp").addEventListener("click", ()=>{ fsize = Math.min(20, fsize+1); document.body.style.fontSize = fsize+"px"; });
-$("#btnFontDown").addEventListener("click", ()=>{ fsize = Math.max(12, fsize-1); document.body.style.fontSize = fsize+"px"; });
-
-/* ------------------------ Net status (just cosmetic) ------------------------ */
-function updateNet(){
-  const online = navigator.onLine;
-  netState.className = "pill "+(online?"ok":"warn");
-  netState.textContent = online? "Status: Online (lokale Speicherung aktiv)":"Status: Offline-fähig (Browser-Speicher)";
-}
-window.addEventListener("online",updateNet);
-window.addEventListener("offline",updateNet);
-updateNet();
-
-/* ------------------------ Utils ------------------------ */
-function esc(s){ return (s??"").toString().replace(/[&<>"']/g, m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m])); }
-function fmtSize(n){ if(!n && n!==0) return "–"; const u=["B","KB","MB","GB"]; let i=0; while(n>1024&&i<u.length-1){n/=1024;i++;} return n.toFixed(1)+" "+u[i]; }
-
-/* ------------------------ Boot ------------------------ */
-document.addEventListener("DOMContentLoaded", ()=>{
-  renderSteps(); renderForm(); renderSummary();
-  $("#btnNew").addEventListener("click", ()=>{
-    state = { id:PROCESS.id, data:{}, files:{}, vnr:null, status:"Entwurf" };
-    saveState();
-    currentStep=0; persistUI();
-    confirmCard.style.display="none";
-  });
-});
-</script>
+<script src="app.js"></script>
 </body>
 </html>
