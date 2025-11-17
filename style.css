@@ -1,0 +1,373 @@
+/* Grundlayout – neutral, leicht anpassbar für CausaNova/Branding */
+
+:root {
+    --bg-body: #f4f5f7;
+    --bg-surface: #ffffff;
+    --bg-sidebar: #101828;
+    --bg-sidebar-active: #1d2939;
+    --border-subtle: #e5e7eb;
+    --text-main: #111827;
+    --text-muted: #6b7280;
+    --accent: #2563eb;
+    --accent-soft: #dbeafe;
+    --danger: #b91c1c;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --shadow-soft: 0 10px 25px rgba(15, 23, 42, 0.12);
+    --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: var(--font-sans);
+    background: var(--bg-body);
+    color: var(--text-main);
+}
+
+/* Header */
+
+.app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    background: var(--bg-sidebar);
+    color: #f9fafb;
+}
+
+.app-header-title h1 {
+    margin: 0;
+    font-size: 20px;
+}
+
+.app-subtitle {
+    margin: 2px 0 0;
+    font-size: 13px;
+    color: #e5e7eb;
+}
+
+.app-header-status {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+    font-size: 12px;
+}
+
+.save-status {
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: rgba(15, 118, 110, 0.15);
+    color: #a7f3d0;
+}
+
+/* Layout */
+
+.app-layout {
+    display: grid;
+    grid-template-columns: 260px minmax(0, 1fr);
+    height: calc(100vh - 56px);
+}
+
+/* Sidebar */
+
+.sidebar {
+    background: var(--bg-sidebar);
+    color: #e5e7eb;
+    padding: 12px 12px 20px;
+    overflow-y: auto;
+    border-right: 1px solid #111827;
+}
+
+.sidebar-title {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    margin: 0 0 10px;
+    color: #9ca3af;
+}
+
+.step-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.step-item {
+    padding: 8px 10px;
+    margin-bottom: 4px;
+    border-radius: 6px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    color: #cbd5f5;
+}
+
+.step-item:hover {
+    background: #111827;
+}
+
+.step-item.active {
+    background: var(--bg-sidebar-active);
+    color: #f9fafb;
+    font-weight: 600;
+}
+
+/* Content */
+
+.content {
+    position: relative;
+    padding: 16px 18px 68px; /* Platz für Footer */
+    overflow-y: auto;
+    background: radial-gradient(circle at top, #eff6ff 0, #f4f5f7 40%, #f9fafb 100%);
+}
+
+.view {
+    display: none;
+    background: var(--bg-surface);
+    border-radius: var(--radius-lg);
+    padding: 16px 18px 18px;
+    box-shadow: var(--shadow-soft);
+    border: 1px solid rgba(148, 163, 184, 0.4);
+}
+
+.view.active {
+    display: block;
+}
+
+.view h2 {
+    margin-top: 0;
+    font-size: 18px;
+}
+
+.view-description {
+    margin-top: 4px;
+    margin-bottom: 14px;
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+/* Formulare */
+
+.view-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.form-row {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.form-row-inline {
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+}
+
+.form-row label {
+    font-size: 13px;
+    font-weight: 500;
+    color: #374151;
+}
+
+input[type="text"],
+input[type="date"],
+textarea,
+select {
+    border-radius: 6px;
+    border: 1px solid var(--border-subtle);
+    padding: 7px 9px;
+    font-size: 14px;
+    font-family: inherit;
+    background: #f9fafb;
+    transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+}
+
+input[type="text"]:focus,
+input[type="date"]:focus,
+textarea:focus,
+select:focus {
+    outline: none;
+    border-color: var(--accent);
+    background: #ffffff;
+    box-shadow: 0 0 0 1px var(--accent-soft);
+}
+
+textarea {
+    resize: vertical;
+    min-height: 60px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 10px 14px;
+}
+
+/* Footer-Navigation */
+
+.nav-footer {
+    position: sticky;
+    bottom: 0;
+    left: 0;
+    margin-top: 16px;
+    padding: 8px 12px;
+    background: rgba(15, 23, 42, 0.88);
+    border-radius: var(--radius-lg);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    color: #e5e7eb;
+}
+
+.nav-footer-middle {
+    display: flex;
+    gap: 8px;
+}
+
+.nav-btn {
+    border: none;
+    border-radius: 999px;
+    padding: 7px 14px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    background: rgba(31, 41, 55, 0.9);
+    color: #e5e7eb;
+    transition: background 0.15s, transform 0.05s;
+}
+
+.nav-btn:hover {
+    background: #111827;
+}
+
+.nav-btn:active {
+    transform: scale(0.98);
+}
+
+.nav-btn-primary {
+    background: var(--accent);
+    color: #eff6ff;
+}
+
+.nav-btn-primary:hover {
+    background: #1d4ed8;
+}
+
+.nav-btn-secondary {
+    background: rgba(15, 23, 42, 0.6);
+}
+
+/* Modal */
+
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+}
+
+.modal.hidden {
+    display: none;
+}
+
+.modal-dialog {
+    background: var(--bg-surface);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-soft);
+    width: min(720px, 100% - 32px);
+    max-height: calc(100vh - 120px);
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-size: 15px;
+}
+
+.modal-close {
+    border: none;
+    background: transparent;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.modal-body {
+    padding: 10px 14px 14px;
+}
+
+#exportOutput {
+    width: 100%;
+    min-height: 260px;
+    max-height: 480px;
+    font-family: "SF Mono", ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-size: 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border-subtle);
+    padding: 8px;
+    background: #0b1120;
+    color: #e5e7eb;
+    resize: vertical;
+}
+
+/* Responsive */
+
+@media (max-width: 880px) {
+    .app-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .sidebar {
+        display: none;
+    }
+
+    .content {
+        padding: 12px 10px 72px;
+    }
+
+    .view {
+        padding: 14px 12px 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .nav-footer {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .nav-footer-middle {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .nav-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
